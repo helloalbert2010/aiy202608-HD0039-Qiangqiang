@@ -40,7 +40,7 @@ npm run preview  # 本地预览已构建版本
 | `notes.html` | 按时间查看所有随手记正文 |
 | `atlas.html` | 事件关系星球 |
 | `growth.html` | 个人成长画像、特质雷达与年度认知边界对比 |
-| `settings.html` | 本地 API Key 和自定义分类 |
+| `settings.html` | 兼容入口，访问后自动回到首页 |
 
 首页仅由 `home.js` 和 `home.css` 实现。不要再添加方案编号页面或方案选择页；历史十套首页设计已移出工作区并归档。
 

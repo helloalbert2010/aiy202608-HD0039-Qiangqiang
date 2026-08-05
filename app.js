@@ -369,11 +369,11 @@ function getCompanionDays(records) {
 
 function navMarkup(active) {
   var items = [
-    ['home','home','首页','/index.html'], ['record','pen-line','开始记录','/record.html'], ['library','library-big','我的记录','/library.html'], ['chat','message-circle','AI 对话','/chat.html'], ['calendar','calendar-days','日历','/calendar.html'], ['notes','notebook-pen','我的随手记','/notes.html'], ['atlas','orbit','事件星球','/atlas.html'], ['growth','radar','成长画像','/growth.html']
+    ['home','home','首页','/index.html'], ['record','pen-line','开始记录','/record.html'], ['library','library-big','我的记录','/library.html'], ['chat','message-circle','AI 对话','/chat.html'], ['notes','notebook-pen','我的随手记','/notes.html'], ['growth','radar','成长画像','/growth.html'], ['atlas','orbit','事件星球','/atlas.html'], ['calendar','calendar-days','日历','/calendar.html']
   ];
   var html = '<a class="brand" href="/index.html" aria-label="MyArchive 首页"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">MyArchive</span><span class="brand-caption">PERSONAL ARCHIVE</span></a><nav class="sidebar-nav" aria-label="主要导航">';
   items.forEach(function (item) { html += '<a class="nav-item ' + (active === item[0] ? 'active' : '') + '" href="' + item[3] + '" title="' + item[2] + '" aria-label="' + item[2] + '"><span class="nav-icon"><i data-lucide="' + item[1] + '"></i></span><span>' + item[2] + '</span></a>'; });
-  html += '<a class="nav-item ' + (active === 'settings' ? 'active' : '') + '" href="/settings.html" title="设置" aria-label="设置"><span class="nav-icon"><i data-lucide="settings-2"></i></span><span>设置</span></a></nav>';
+  html += '</nav>';
   var spaceName = isCloudConfigured() ? '共享云空间' : '本地空间';
   var spaceDetail = isCloudConfigured() ? '云端已连接' : '本机存储';
   html += '<div class="sidebar-foot"><a class="user-mini" href="#" id="sidebar-space"><div class="avatar"><i data-lucide="database"></i></div><div><strong>' + spaceName + '</strong><span>' + spaceDetail + '</span></div><i data-lucide="arrow-right" aria-hidden="true"></i></a></div>';
@@ -942,6 +942,7 @@ function renderIcons() {
 }
 
 async function init() {
+  if (getCurrentPage() === 'settings') { location.replace('/index.html'); return; }
   var storageStatus = await syncArchiveFromProject();
   if (storageStatus.ready) await migrateClusteredNotes();
   initShell();
