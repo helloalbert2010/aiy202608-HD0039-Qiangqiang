@@ -18,6 +18,11 @@ const requiredFiles = [
   'home.js',
   'home.css',
   'growth-profile.js',
+  'mobile-api/repository.js',
+  'mobile-api/server.js',
+  'mobile-api/start.js',
+  'mobile-api/server.test.js',
+  'scripts/verify-mobile-api-live.mjs',
   'docs/cloud-database.md',
   'docs/competition-state.md',
   'docs/test-evidence.md',
@@ -85,7 +90,7 @@ for (const rule of requiredCloudRules) {
 
 const envExamplePath = join(root, '.env.example');
 const envExample = existsSync(envExamplePath) ? readFileSync(envExamplePath, 'utf8') : '';
-for (const variable of ['VITE_SUPABASE_URL=', 'VITE_SUPABASE_PUBLISHABLE_KEY=']) {
+for (const variable of ['VITE_SUPABASE_URL=', 'VITE_SUPABASE_PUBLISHABLE_KEY=', 'HOST=', 'PORT=', 'SUPABASE_URL=', 'SUPABASE_PUBLISHABLE_KEY=']) {
   if (!envExample.includes(variable)) fail(`.env.example is missing public variable: ${variable}`);
 }
 for (const secretName of ['SERVICE_ROLE', 'DATABASE_PASSWORD']) {

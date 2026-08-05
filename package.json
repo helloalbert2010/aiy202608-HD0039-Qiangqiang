@@ -5,10 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
+    "dev:api": "node mobile-api/start.js",
     "clean": "node scripts/clean-dist.mjs",
     "build": "npm run clean && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "check": "node scripts/check-project.mjs && node scripts/check-audio-chunks.mjs && node scripts/check-growth-profile.mjs",
+    "check:mobile-api": "node --test mobile-api/server.test.js",
+    "check": "node scripts/check-project.mjs && node scripts/check-audio-chunks.mjs && node scripts/check-growth-profile.mjs && npm run check:mobile-api",
+    "verify:mobile-api": "node scripts/verify-mobile-api-live.mjs",
     "verify": "npm run check && npm run build"
   },
   "engines": {

@@ -23,9 +23,17 @@ npm run clean    # 清理生成的 dist/
 npm run build    # 生成生产构建到 dist/
 npm run verify   # 先检查，再构建
 npm run preview  # 本地预览已构建版本
+npm run dev:api  # 独立启动手机共库 API：http://127.0.0.1:8787
+npm run verify:mobile-api  # 对正在运行的 8787 API 执行真实云端合同验收并精确清理测试数据
 ```
 
 需要 Node.js `20.19+`、`22.12+` 或更新版本。
+
+## 手机共库 API
+
+手机端通过独立 Node 服务访问与 Web 相同的 Supabase 表，不把数据库 key 写入 APK。服务读取被 Git 忽略的 `.env.local` 中 `SUPABASE_URL` 和 `SUPABASE_PUBLISHABLE_KEY`，默认只监听 `127.0.0.1:8787`；MuMu 使用 `adb reverse tcp:8787 tcp:8787` 后仍访问 `http://127.0.0.1:8787`。
+
+已实现 `/health`、`/api/records`、`/api/archive/snapshot`、`/api/categories`、`POST /api/records`、`POST /api/notes` 和可选的 `POST /api/assistant/messages`。完整手机合同与实测结果见 `MYARCHIVE_MOBILE_BACKEND_READY.md`。
 
 ## 页面与入口
 
