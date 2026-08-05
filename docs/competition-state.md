@@ -1,6 +1,6 @@
 # Competition State
 
-Updated: 2026-08-06 02:27 Asia/Shanghai
+Updated: 2026-08-06 03:44 Asia/Shanghai
 
 ## Status
 
@@ -9,10 +9,10 @@ Updated: 2026-08-06 02:27 Asia/Shanghai
 - Time remaining: unknown.
 - Current phase: 10 - Submission and pitch.
 - Phase pass condition: Runnable Demo, GitHub, product document, PPT, timed script, backup, evidence, contribution record, and Q&A ownership are ready and the required track capability is visible.
-- Verified evidence: Public GitHub repository exists; three team accounts have collaborator access; online Demo returns HTTP 200; Web cloud/local fallback, deterministic growth rules, build, and mobile API contracts have recorded evidence.
+- Verified evidence: Public GitHub repository exists; all three team accounts have accepted collaborator access with no pending invitations; MIT, official Topic, README structure, current tracked files, and historical text blobs are verified; online Demo returns HTTP 200; Web cloud/local fallback, deterministic growth rules, build, and mobile API contracts have recorded evidence.
 - Main blocker or risk: The registered track is missing, so track-specific eligibility cannot be proven. The canonical repository capitalization differs from the lowercase Builder Guide rule but must remain unchanged per the user. Peter and Vito have no own-account commits yet. The public Demo has no authentication or user isolation.
-- Next concrete deliverable: Complete the organizer repository package, then have the team confirm the track and each non-host teammate make one truthful commit.
-- Acceptance condition: README, MIT LICENSE, official Topic, secret scan, and `main` are pushed; track is consistent across README/PPT/Bloom; GitHub contributors show all participating teammates.
+- Next concrete deliverable: Confirm the registered track and repository-capitalization exception with the organizer, then have Peter and Vito each make one truthful own-account commit.
+- Acceptance condition: The confirmed track is consistent across README/PPT/Bloom; the organizer accepts the unchanged repository name; GitHub contributors show all participating teammates.
 - Student owner: Albert coordinates repository submission; Peter and Vito own their truthful contribution sign-ins. Availability is unverified.
 
 ## Rules And Sources
@@ -54,7 +54,7 @@ Updated: 2026-08-06 02:27 Asia/Shanghai
 ## Submission Readiness
 
 - Runnable Demo: Online URL returns HTTP 200; fresh-browser workflow and three-run stability still need final confirmation.
-- GitHub / README: Public repository and collaborators verified; organizer README/License/Topic/security update in progress.
+- GitHub / README: Public repository, accepted collaborators, organizer README structure, MIT License, Topic, and current/history secret scan are verified; track, name exception, and two teammate sign-in commits remain unresolved.
 - Product document: `README.md`, `docs/MyArchive-product-overview.md`, `docs/PRD.md`, and `docs/architecture.md`.
 - Architecture and AI workflow: Documented, including AI/deterministic boundary and fallbacks.
 - Test evidence: Existing focused evidence plus submission scan; full Demo repetition pending.
