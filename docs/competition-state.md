@@ -1,62 +1,64 @@
 # Competition State
 
-Updated: 2026-08-05 11:21 Asia/Shanghai
+Updated: 2026-08-06 02:27 Asia/Shanghai
 
 ## Status
 
-- Track: unverified
-- Official build clock running: unverified
-- Time remaining: unknown
-- Current phase: 3 - Supabase single-space data-path validation
-- Phase pass condition: The no-login shared database path works end to end with a recorded fallback and explicit security limitation.
-- Verified evidence: Supabase `records`, `notes`, `categories`, and `archive_meta` have RLS enabled, one shared policy each, and no `user_id`; the Web client uploaded and read back the shared archive, and its write/delete and cache fallback paths passed. The evidence-grounded growth page now produces two traceable radars from original record fields; deterministic rules, empty input, year switching, evidence navigation, desktop layout, and mobile layout have each passed one focused check.
-- Main blocker or risk: Anyone who obtains the publishable key can read and write the entire archive. Growth scores are explainable keyword-rule outputs, not a validated psychological or educational measurement, and can still need human review for wording context.
-- Next concrete deliverable: Connect the mobile client to the same shared tables and run one Web-to-mobile note synchronization test.
-- Acceptance condition: A temporary note created on one client appears on the other after refresh and is removed from both after cleanup.
-- Student owner: unassigned; the team must confirm ownership before implementation.
+- Track: unverified; the team must confirm the registered command company / track from Bloom or the organizer.
+- Official build clock running: likely within the 2026-08-04 to 2026-08-06 event window, but the exact submission deadline requires the latest organizer notice.
+- Time remaining: unknown.
+- Current phase: 10 - Submission and pitch.
+- Phase pass condition: Runnable Demo, GitHub, product document, PPT, timed script, backup, evidence, contribution record, and Q&A ownership are ready and the required track capability is visible.
+- Verified evidence: Public GitHub repository exists; three team accounts have collaborator access; online Demo returns HTTP 200; Web cloud/local fallback, deterministic growth rules, build, and mobile API contracts have recorded evidence.
+- Main blocker or risk: The registered track is missing, so track-specific eligibility cannot be proven. The canonical repository capitalization differs from the lowercase Builder Guide rule but must remain unchanged per the user. Peter and Vito have no own-account commits yet. The public Demo has no authentication or user isolation.
+- Next concrete deliverable: Complete the organizer repository package, then have the team confirm the track and each non-host teammate make one truthful commit.
+- Acceptance condition: README, MIT LICENSE, official Topic, secret scan, and `main` are pushed; track is consistent across README/PPT/Bloom; GitHub contributors show all participating teammates.
+- Student owner: Albert coordinates repository submission; Peter and Vito own their truthful contribution sign-ins. Availability is unverified.
 
 ## Rules And Sources
 
-- Latest checked official source: unverified; organizer materials must be checked before the official build window.
-- Source date: unverified
-- Required platform/model: unverified
-- Required Agent/Skill/multimodal capability: unverified
-- Required submissions: unverified
-- Pitch format: unverified
-- Confirmed reuse policy: unverified
-- Unresolved rule and organizer question: Which pre-event code, schemas, prompts, data, and assets may be reused, and how must they be disclosed?
+- Latest checked official source: `提交要求.pdf`, AIY Hackathon Builder Guide v2.0, local file updated 2026-08-04.
+- Additional official source: `AIY Hackathon 2026活动手册.pdf`, local file updated 2026-08-03; event dates and submission/pitch format.
+- Track source: `AI黑客松命题.pdf`, local file updated 2026-07-20; exact selected track remains unverified.
+- Required platform/model: Depends on the registered high-school track; do not infer from product similarity.
+- Required Agent/Skill/multimodal capability: Depends on track. For example, the Coze high-school track requires Coze 3.0 multi-Agent and at least two Skills; WorkBuddy requires the product plus WorkBuddy conversation evidence.
+- Required submissions: Bloom task card with pitch PPT and product document, runnable Demo/prototype, open-source GitHub code/Demo and repository URL.
+- Pitch format: 10-minute presentation plus 5-minute Q&A.
+- GitHub hard requirements: Public teammate-owned repository, collaborators, prescribed name, organizer README, MIT LICENSE with 2026 participant names, Topic `aiy-hackathon-202608`, and no secrets/private company data.
+- Confirmed reuse policy: unverified.
+- Unresolved organizer question: Confirm team HD0039's registered command company / track, exact submission deadline, accepted repository capitalization, and any disclosure needed for pre-event code/assets.
 
 ## Product Snapshot
 
-- Target user: International high-school students.
-- Specific situation: Capturing and retrieving experiences for later reflection and application material.
-- Pain evidence: unverified
-- One-line solution: Record experiences once, then organize, retrieve, and turn them into traceable growth evidence with AI assistance and deterministic rules.
-- Core AI action: Summarize, classify, transcribe, and retrieve experience material.
-- Deterministic rules: Shared-record identity, date normalization, category constraints, storage boundaries, explicit save/delete behavior, trait evidence levels, normalized trait scores, and year-over-year domain points.
-- User-visible result: A searchable experience archive with notes, calendar views, relationship visualization, and a source-linked personal growth profile.
-- MVP: Existing local Web core plus one verified cross-device database slice.
-- Non-goals: Full Web deployment, cloud attachment storage, realtime collaboration, and production AI proxy in this database phase.
-- Three-minute Demo: unverified
+- Target user: Students with many experiences but no systematic organizing habit.
+- Specific situation: Preparing a showcase, resume, application essay, interview, or presentation under time pressure.
+- Pain evidence: The team's 2026-08-04 problem-definition card records their own difficulty searching notes, chats, photos, and documents for past dates, roles, results, and evidence.
+- One-line solution: Record an experience once, then use AI and traceable rules to retrieve, reorganize, and review it for future goals.
+- Core AI action: Transcribe, extract, summarize, classify, retrieve, and draft from stored experience material.
+- Deterministic rules: Date/category validation, storage keys, sequential audio chunks, evidence IDs, explicit save/delete behavior, cache fallback, and growth scoring.
+- User-visible result: A searchable archive, source-linked AI conversation result, calendar/atlas view, or evidence-backed growth profile.
+- MVP: Current Vite Web core, public Demo, shared/local data paths, and mobile API contract.
+- Non-goals: Production authentication, public personal-data storage, cloud attachment sync, and validated psychological assessment.
+- Three-minute Demo: Desensitized record -> AI organization -> chat retrieval -> source-linked growth evidence. Three consecutive runs remain pending.
 
 ## Validation And Stability
 
-- Highest technical risk: Cross-device shared writes without authentication expose the full archive to anyone holding the publishable key.
-- Spike result and evidence: Shared schema migration, initial import, Web cloud read/write/delete, migration idempotency marker, local-cache failure fallback, and the deterministic growth-profile slice are verified. Mobile database behavior remains unverified. See `docs/test-evidence.md`.
-- Core Demo status: Web cloud flow and one growth-profile browser run work; mobile-to-Web synchronization and three consecutive full Demo runs are pending.
-- Test-set size: Existing cloud checks plus 1 growth-rule fixture set, 1 empty-input rule check, 1 source-link interaction, 1 zero-baseline year check, 1 desktop layout check, and 1 mobile layout check completed; 0 mobile cross-device database tests completed.
-- Known limitations: Attachments remain local; the shared database has no user authentication or abuse protection; keyword scoring does not understand every negation or implicit context and must remain reviewable evidence, not an objective personality diagnosis.
-- Critical dependency fallback: Preserve the current local JSON and browser-cache path until cloud acceptance passes.
-- Recording/offline fallback: Existing local Demo; exact competition fallback unverified.
+- Highest technical risk: Public client keys and a no-login shared database expose the archive; real personal data is not appropriate.
+- Spike result and evidence: Shared schema, Web read/write/delete/cache fallback, growth rules, build, and mobile API contracts are recorded in `docs/test-evidence.md` and `MYARCHIVE_MOBILE_BACKEND_READY.md`.
+- Core Demo status: Individual Web paths have passed focused checks; three consecutive end-to-end Demo runs are not recorded.
+- Test-set size: See `docs/test-evidence.md`; no percentage/accuracy claim is made.
+- Known limitations: Attachments are not shared across devices; growth scoring is keyword-based; browser-direct model calls are local-Demo only; mobile device/ADB validation is pending.
+- Critical dependency fallback: Local project JSON, browser cache, IndexedDB attachments, local summaries, and explicit unavailable states.
+- Recording/offline fallback: Local Demo and cached data exist; final screen recording/offline package is pending.
 
 ## Submission Readiness
 
-- Runnable Demo: Web shared-cloud flow and local fallback reverified on 2026-08-03; growth profile passed one browser run on 2026-08-05; mobile flow pending
-- GitHub / README: repository exists; current local changes are not yet committed
-- Product document: partial README and database contract
-- Architecture and AI workflow: partial
-- Test evidence: Web shared-cloud and fallback evidence recorded in `docs/test-evidence.md`; mobile evidence missing
-- Pitch deck and timed script: unverified
-- Contribution record: missing
-- Backup: local JSON rolling backup exists; cloud backup unverified
-- Q&A ownership: unverified
+- Runnable Demo: Online URL returns HTTP 200; fresh-browser workflow and three-run stability still need final confirmation.
+- GitHub / README: Public repository and collaborators verified; organizer README/License/Topic/security update in progress.
+- Product document: `README.md`, `docs/MyArchive-product-overview.md`, `docs/PRD.md`, and `docs/architecture.md`.
+- Architecture and AI workflow: Documented, including AI/deterministic boundary and fallbacks.
+- Test evidence: Existing focused evidence plus submission scan; full Demo repetition pending.
+- Pitch deck and timed script: `MyArchive.pptx` exists locally with 7 slides; timing and final submission are unverified.
+- Contribution record: Roles recorded from the deck; Peter and Vito sign-in commits pending.
+- Backup: Local archive/cache fallback exists; final Demo recording/offline copy pending.
+- Q&A ownership: unverified.

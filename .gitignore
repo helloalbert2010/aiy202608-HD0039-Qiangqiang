@@ -1,5 +1,17 @@
 node_modules/
 dist/
+.android-toolchain/
+android-app/.gradle/
+android-app/app/build/
+*.apk
+*.aab
+*.jks
+*.keystore
+*.key
+secrets.*
+output/
+tmp/
+MYARCHIVE_MOBILE_BACKEND_HANDOFF.md
 .env
 .env.*
 !.env.example

@@ -1,12 +1,62 @@
-# MyArchive · 经历记忆库 MVP
+# MyArchive · 经历记忆库
 
-面向国际高中生的多页面产品原型。它用于记录经历、浏览事件关系图、检索经历库，并通过 AI 协助整理素材。
+> 帮助经历丰富但缺少整理习惯的学生，把分散的活动与想法沉淀为可检索、可追溯、可复用的成长素材。
+
+**AIY 黑客松 2026 深圳站参赛作品**
+
+- 命题企业 / 赛道：待团队根据组委会现场登记结果确认；当前实现是独立 Web 应用
+- 团队：强强
+- 团队编号：HD0039
+- 在线体验：[https://www.my-archive.top/](https://www.my-archive.top/)
+- GitHub：[helloalbert2010/aiy202608-HD0039-Qiangqiang](https://github.com/helloalbert2010/aiy202608-HD0039-Qiangqiang)
+
+![MyArchive 移动端首页演示](docs/assets/myarchive-mobile-home.png)
+
+## 团队分工
+
+| 成员 | GitHub | 负责 |
+| --- | --- | --- |
+| Albert | [@helloalbert2010](https://github.com/helloalbert2010) | 队长、Web 端开发、数据库开发 |
+| Peter | [@p1ter111](https://github.com/p1ter111) | Android App 端开发、页面设计 |
+| Vito | [@Understanding-king](https://github.com/Understanding-king) | 开发路径整理、成长画像开发、宣传物料 |
+
+分工来源为团队现有路演材料。提交记录只能证明已推送到 GitHub 的工作；非代码贡献与 AI 协助记录见 [团队贡献说明](docs/contributions.md)。
+
+## 它能做什么
+
+- 用文字、语音、文档和照片记录经历，AI 辅助生成事实型摘要、标题与分类。
+- 在经历库、日历和 3D 事件星球中检索与回顾长期素材。
+- 在 AI 对话中引用已有事件，整理简历、面试、申请文书或路演素材。
+- 通过可追溯的规则生成成长画像，并回到原始经历核对证据。
+- 在 AI 或云端依赖不可用时保留本地演示和缓存回退路径。
+
+## 演示
+
+推荐 3 分钟核心路径：新建一段经历 -> AI 整理并保存 -> 在 AI 对话中检索该经历 -> 打开成长画像核对来源。
+
+- 在线体验：[https://www.my-archive.top/](https://www.my-archive.top/)
+- 产品说明：[docs/MyArchive-product-overview.md](docs/MyArchive-product-overview.md)
+- 测试证据：[docs/test-evidence.md](docs/test-evidence.md)
+
+在线版是无登录共享演示环境。请只使用脱敏测试数据，不要输入姓名、联系方式、证件、健康信息、账号密码或未公开申请材料。
+
+## 用到的技术 / AI 工具
+
+- Vite 多页面客户端、JavaScript、CSS
+- DeepSeek V4 Pro：文字整理、对话与检索生成
+- GLM-5V-Turbo / GLM-ASR-2512：图片理解与语音转写
+- Supabase：共享经历、随手记和分类数据
+- Three.js：事件关系星球
+- Vercel：Web 部署
+- Codex：开发、测试和提交文档辅助；最终产品决策与验收由团队负责
+
+## 项目说明
 
 当前是一个 **Vite 多页面应用**。配置 Supabase 后，事件、随手记和自定义分类以唯一一套云端数据为主存储，不区分用户，也不需要登录；浏览器本地存储作为读取缓存。未配置 Supabase 时仍使用项目内的 `data/` 文件接口，附件暂时保存在本机。
 
 Supabase 开发项目已经完成共享结构迁移，Web 客户端会直接读写云端。`data/archive-data.json` 已一次性上传并核对为 35 条事件、31 条随手记。范围、安全边界和接入验收见 [云端数据库准备](docs/cloud-database.md)。
 
-## 快速开始
+## 怎么跑起来
 
 ```powershell
 npm ci
@@ -114,3 +164,16 @@ npm run verify:mobile-api  # 对正在运行的 8787 API 执行真实云端合�
 - 附件仍只在当前项目目录或当前浏览器中保存，手机端不能取得附件本体。
 - 没有自动化浏览器测试；每次修改交互或布局后，至少运行 `npm run verify` 并手动检查受影响页面。
 - `app.js` 目前是集中式页面控制器。功能改动应先定位对应 `init*` 函数，避免无关重构。
+
+## 后续计划
+
+- 先将模型调用迁移到受控服务端代理，避免在公开客户端中暴露供应商 Key。
+- 增加身份认证和用户级数据隔离，再把共享演示数据库用于真实个人资料。
+- 完成三次连续核心 Demo、手机实机联调和离线/录屏备份。
+- 继续补齐人工核对、隐私提示、导出备份和依赖失败状态。
+
+## 版权与许可
+
+本作品版权归 **Albert、Peter、Vito** 共同所有，采用 [MIT License](LICENSE) 开源，使用请署名。
+
+本项目为 AIY 黑客松参赛作品，作品归团队所有；AIY 组委会仅作收录与展示。

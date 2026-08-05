@@ -8,6 +8,8 @@ const pages = ['index', 'record', 'chat', 'atlas', 'library', 'detail', 'setting
 const requiredFiles = [
   'README.md',
   'AGENTS.md',
+  'TASKS.md',
+  'LICENSE',
   '.env.example',
   'package.json',
   'vercel.json',
@@ -26,10 +28,16 @@ const requiredFiles = [
   'scripts/verify-mobile-api-live.mjs',
   'docs/cloud-database.md',
   'docs/competition-state.md',
+  'docs/PRD.md',
+  'docs/architecture.md',
+  'docs/contributions.md',
+  'docs/decisions.md',
+  'docs/external-resources.md',
+  'docs/submission-checklist.md',
   'docs/test-evidence.md',
   'supabase/migrations/202608030001_archive_schema.sql'
 ];
-const ignoredDirectories = new Set(['.git', 'node_modules', 'dist']);
+const ignoredDirectories = new Set(['.git', '.gradle', '.android-toolchain', 'build', 'node_modules', 'dist', 'output', 'tmp']);
 const forbiddenLegacyTerms = [
   ['home', 'variants'].join('-'),
   ['home', 'variant'].join('-'),

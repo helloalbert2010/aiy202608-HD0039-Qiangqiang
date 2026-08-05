@@ -2,11 +2,11 @@
 
 ## Test Environment
 
-- Commit: `1e5272f` baseline with uncommitted growth-profile changes
-- Local URL: `http://127.0.0.1:5175/growth.html` during the growth-profile regression; earlier cloud checks used `http://127.0.0.1:5177/`
+- Baseline commits: `1e5272f` for the growth-profile work, `3e296a5` for the mobile API, and `a348569` before the submission-compliance update
+- Local URLs: Focused checks used temporary Vite ports from 5175 through 5178; the public Demo is `https://www.my-archive.top/`
 - Cloud project: Supabase `myarchive-dev`, Tokyo `ap-northeast-1`
 - Tester: Codex browser regression
-- Date: 2026-08-05 Asia/Shanghai
+- Dates: 2026-08-03 through 2026-08-06 Asia/Shanghai
 
 ## Results
 
@@ -32,10 +32,15 @@
 | GROWTH-05 | edge/year baseline | Change the current year from 2026 to 2025 | The comparison year remains earlier and a missing year is treated as a zero-record baseline | The control added 2024 and displayed `2024 vs 2025，对比 0 / 12 条经历` | yes | future-year comparison removed | Browser interaction, 2026-08-05 |
 | GROWTH-06 | responsive layout | Inspect 1280×720 and 390×844 viewports | No horizontal overflow, cards stack on mobile, and radar labels do not collide | Desktop and mobile `scrollWidth` equaled `clientWidth`; mobile cards stacked and both radars returned zero label collisions | yes | - | Browser geometry and screenshot, 2026-08-05 |
 | GROWTH-07 | browser action | Click `生成画像` after restoring 2026 vs 2025 | Current records are recalculated and the control returns from loading | Button returned to `生成画像`; toast displayed `画像已基于当前经历库重新生成` | yes | - | Browser state check, 2026-08-05 |
+| CHAT-VOICE-01 | static/build | Add a microphone control to the AI chat composer and run `npm run verify` | Chat reuses the existing MediaRecorder -> WAV -> sequential GLM-ASR path; checks and build pass | Project, audio-chunk, growth, mobile API, and Vite build checks passed | yes | Added shared voice setup and transcription-state guard | Commit `a348569`, 2026-08-06 |
+| CHAT-VOICE-02 | responsive layout | Inspect the chat composer on desktop and 390 x 844 mobile viewport | Voice and send controls remain visible and fixed-size without overlap | Both buttons had 42 x 42 geometry; desktop/mobile screenshots showed no composer overlap | yes | - | Browser geometry check, 2026-08-06 |
+| SUBMISSION-01 | repository metadata | Query the canonical GitHub repository | Repository is Public, uses `main`, and participating teammates have collaborator access | Public repository verified; collaborators were `helloalbert2010`, `p1ter111`, and `Understanding-king` | yes | - | GitHub API/CLI, 2026-08-06 |
+| SUBMISSION-02 | privacy/secret | Scan candidate repository files and Git history for token/key patterns | No actual API key, token, private key, APK, or local secret file is included | Tracked history scan found only documentation terms/placeholders; automated candidate-file check added | yes | Added `scripts/check-submission.mjs` and ignore rules | Local Git scan, 2026-08-06 |
+| SUBMISSION-03 | online availability | Request the public Demo URL | The URL returns a successful response | `https://www.my-archive.top/` returned HTTP 200 | yes | - | Node fetch, 2026-08-06 |
 
 ## Claims
 
-The Web shared-cloud schema, initial import, read/write/delete path, reload behavior, cache fallback, and one evidence-grounded growth-profile run are verified. The growth scores are deterministic keyword-rule summaries of source records, not validated personality or learning measurements. Mobile synchronization, deployment hardening, abuse protection, attachment sharing, and three-run Demo stability are not yet supported claims. The current no-login design provides no user isolation.
+The Web shared-cloud schema, initial import, read/write/delete path, reload behavior, cache fallback, one evidence-grounded growth-profile run, chat voice layout, mobile API contract, public repository metadata, and public URL are verified. The growth scores are deterministic keyword-rule summaries of source records, not validated personality or learning measurements. Android device/ADB validation, deployment hardening, abuse protection, attachment sharing, and three-run Demo stability are not yet supported claims. The current no-login design provides no user isolation.
 
 ## Demo Repetition
 
