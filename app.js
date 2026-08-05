@@ -266,6 +266,17 @@ async function migrateClusteredNotes() {
 function getSettings() {
   try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || { categories:[], deepseek:'', glm:'' }; } catch (e) { return { categories:[], deepseek:'', glm:'' }; }
 }
+const ENV_AI_KEYS = {
+  deepseek:String(import.meta.env.VITE_DEEPSEEK_API_KEY || '').trim(),
+  glm:String(import.meta.env.VITE_GLM_API_KEY || '').trim()
+};
+function getAiKeys() {
+  var settings = getSettings();
+  return {
+    deepseek:ENV_AI_KEYS.deepseek || String(settings.deepseek || '').trim(),
+    glm:ENV_AI_KEYS.glm || String(settings.glm || '').trim()
+  };
+}
 function saveSettings(settings) { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
 async function saveCustomCategories(settings) {
   if (isCloudConfigured()) await upsertCloudCategories(settings.categories || []);
@@ -455,12 +466,12 @@ function setupNoteVoice(button, status, target) {
       recorder.ondataavailable = function (event) { if (event.data.size) chunks.push(event.data); };
       recorder.onstop = async function () {
         clearInterval(clock); clearTimeout(limitTimer); stream.getTracks().forEach(function (track) { track.stop(); }); button.classList.remove('recording'); button.setAttribute('aria-label', '语音转文字');
-        var settings = getSettings();
-        if (!settings.glm) { status.textContent = '请先在设置中填写 GLM Key'; showToast('录音已完成，配置 GLM Key 后可转成文字'); return; }
+        var aiKeys = getAiKeys();
+        if (!aiKeys.glm) { status.textContent = '请先在设置中填写 GLM Key'; showToast('录音已完成，配置 GLM Key 后可转成文字'); return; }
         try {
           status.textContent = '正在转成文字…';
           var blob = new Blob(chunks, { type:recorder.mimeType || 'audio/webm' });
-          var transcript = await transcribeAudioSequentially(settings.glm, await audioBlobToWav(blob), { filename:'quick-note.wav', onProgress:function (index, total) { status.textContent = total > 1 ? '识别第 ' + index + ' / ' + total + ' 段…' : '正在转成文字…'; } });
+          var transcript = await transcribeAudioSequentially(aiKeys.glm, await audioBlobToWav(blob), { filename:'quick-note.wav', onProgress:function (index, total) { status.textContent = total > 1 ? '识别第 ' + index + ' / ' + total + ' 段…' : '正在转成文字…'; } });
           target.value = [target.value.trim(), transcript].filter(Boolean).join('\n');
           status.textContent = '已加入文本框'; target.focus();
         } catch (error) { status.textContent = '转写失败'; showToast('语音转写失败：' + error.message); }
@@ -527,7 +538,7 @@ function initRecord() {
     try {
       var stream = await navigator.mediaDevices.getUserMedia({ audio:true }); voiceChunks = []; recorder = new MediaRecorder(stream); var startedAt = Date.now();
       recorder.ondataavailable = function (event) { if (event.data.size) voiceChunks.push(event.data); };
-      recorder.onstop = async function () { clearTimeout(voiceLimitTimer); clearInterval(voiceClock); stream.getTracks().forEach(function (track) { track.stop(); }); voiceButton.classList.remove('recording'); captureField.classList.remove('is-recording'); voiceLabel.textContent = '开始语音记录'; voiceButton.setAttribute('aria-label', '开始录音'); var settings = getSettings(); if (!settings.glm) { voiceStatus.textContent = '录音已完成 · 请先在设置中填入 GLM Key 以识别'; return; } try { voiceStatus.textContent = '正在转换录音…'; var blob = new Blob(voiceChunks, { type:recorder.mimeType || 'audio/webm' }); var wavBlob = await audioBlobToWav(blob); var transcript = await transcribeAudioSequentially(settings.glm, wavBlob, { onProgress:function (index, total) { voiceStatus.textContent = total > 1 ? '正在按顺序识别第 ' + index + ' / ' + total + ' 段…' : '正在识别录音…'; } }); descriptionBox.value = [descriptionBox.value, transcript].filter(Boolean).join('\n'); voiceStatus.textContent = '识别完成 · 已按原顺序加入文字'; descriptionBox.dispatchEvent(new Event('blur')); } catch (error) { voiceStatus.textContent = '识别失败：' + error.message; } };
+      recorder.onstop = async function () { clearTimeout(voiceLimitTimer); clearInterval(voiceClock); stream.getTracks().forEach(function (track) { track.stop(); }); voiceButton.classList.remove('recording'); captureField.classList.remove('is-recording'); voiceLabel.textContent = '开始语音记录'; voiceButton.setAttribute('aria-label', '开始录音'); var aiKeys = getAiKeys(); if (!aiKeys.glm) { voiceStatus.textContent = '录音已完成 · 请先在设置中填入 GLM Key 以识别'; return; } try { voiceStatus.textContent = '正在转换录音…'; var blob = new Blob(voiceChunks, { type:recorder.mimeType || 'audio/webm' }); var wavBlob = await audioBlobToWav(blob); var transcript = await transcribeAudioSequentially(aiKeys.glm, wavBlob, { onProgress:function (index, total) { voiceStatus.textContent = total > 1 ? '正在按顺序识别第 ' + index + ' / ' + total + ' 段…' : '正在识别录音…'; } }); descriptionBox.value = [descriptionBox.value, transcript].filter(Boolean).join('\n'); voiceStatus.textContent = '识别完成 · 已按原顺序加入文字'; descriptionBox.dispatchEvent(new Event('blur')); } catch (error) { voiceStatus.textContent = '识别失败：' + error.message; } };
       recorder.start(1000); voiceButton.classList.add('recording'); captureField.classList.add('is-recording'); voiceLabel.textContent = '停止并识别'; voiceButton.setAttribute('aria-label', '停止录音并识别'); voiceStatus.textContent = '正在录音 · 00:00 / 10:00'; voiceClock = setInterval(function () { var seconds = Math.floor((Date.now() - startedAt) / 1000); var min = String(Math.floor(seconds / 60)).padStart(2,'0'); var sec = String(seconds % 60).padStart(2,'0'); voiceStatus.textContent = '正在录音 · ' + min + ':' + sec + ' / 10:00'; }, 1000); voiceLimitTimer = setTimeout(function () { if (recorder.state === 'recording') recorder.stop(); }, 600000);
     } catch (error) { voiceButton.classList.remove('recording'); captureField.classList.remove('is-recording'); voiceLabel.textContent = '开始语音记录'; voiceStatus.textContent = '无法使用麦克风，请检查浏览器权限'; }
   });
@@ -561,20 +572,20 @@ function localRetrievalSummary(description, photoInsights) {
 }
 function inferCategoryFromText(description) { if (/比赛|竞赛|获奖|赛题/.test(description)) return '综合竞赛'; if (/研究|实验|论文|调研/.test(description)) return '研究和探究'; if (/社团|主席|负责人|负责|组织|主持|协调|带领|志愿者/.test(description)) return '领导力活动'; if (/展览|车展|参观|体验/.test(description)) return '探索类活动'; if (/绘画|音乐|戏剧|艺术/.test(description)) return '艺术活动'; return '随手记'; }
 async function generateEventSynthesis(input) {
-  var settings = getSettings(); var analyses = []; var photoInsights = [];
-  if (input.description && settings.deepseek) {
-    try { var textResult = await analyzeTextWithDeepSeek(settings.deepseek, '独立分析以下原始事件记录。提取可确认的时间、地点、人物、对象、行动、结果、感受、意向和不确定信息；不要评价学生。只输出 JSON。\n' + input.description); analyses.push({ type:'text', result:parseModelJson(textResult) }); } catch (error) { analyses.push({ type:'text', result:input.description, warning:'文字独立分析失败：' + error.message }); }
+  var aiKeys = getAiKeys(); var analyses = []; var photoInsights = [];
+  if (input.description && aiKeys.deepseek) {
+    try { var textResult = await analyzeTextWithDeepSeek(aiKeys.deepseek, '独立分析以下原始事件记录。提取可确认的时间、地点、人物、对象、行动、结果、感受、意向和不确定信息；不要评价学生。只输出 JSON。\n' + input.description); analyses.push({ type:'text', result:parseModelJson(textResult) }); } catch (error) { analyses.push({ type:'text', result:input.description, warning:'文字独立分析失败：' + error.message }); }
   } else if (input.description) analyses.push({ type:'text', result:input.description });
-  if (settings.glm) {
+  if (aiKeys.glm) {
     for (var photoIndex = 0; photoIndex < input.photos.length; photoIndex += 1) {
-      try { var dataUrl = await fileToDataUrl(input.photos[photoIndex]); var photoResult = await analyzeMediaWithGlm(settings.glm, { prompt:'只描述这张活动照片中可见的事实：场景、人物、物品、文字和动作。不要推断身份、品牌或事件结果；不确定内容要明确说明。', dataUrl:dataUrl }); photoInsights.push(photoResult); analyses.push({ type:'photo', name:input.photos[photoIndex].name, result:photoResult }); } catch (error) { analyses.push({ type:'photo', name:input.photos[photoIndex].name, warning:'照片分析失败：' + error.message }); }
+      try { var dataUrl = await fileToDataUrl(input.photos[photoIndex]); var photoResult = await analyzeMediaWithGlm(aiKeys.glm, { prompt:'只描述这张活动照片中可见的事实：场景、人物、物品、文字和动作。不要推断身份、品牌或事件结果；不确定内容要明确说明。', dataUrl:dataUrl }); photoInsights.push(photoResult); analyses.push({ type:'photo', name:input.photos[photoIndex].name, result:photoResult }); } catch (error) { analyses.push({ type:'photo', name:input.photos[photoIndex].name, warning:'照片分析失败：' + error.message }); }
     }
   }
   input.documents.forEach(function (document) { analyses.push({ type:'document', name:document.name, note:'文件已保存，当前摘要仅使用文件名作为检索线索' }); });
   var fallbackDescription = localRetrievalSummary(input.description, photoInsights); var fallback = { title:input.title || fallbackDescription.replace(/[。！？].*$/, '').slice(0, 28) || '一段新的经历', category:input.category || inferCategoryFromText(input.description), date:input.date || localDateKey(new Date()), aiDescription:fallbackDescription, keywords:[], uncertainties:[] };
-  if (!settings.deepseek) return fallback;
+  if (!aiKeys.deepseek) return fallback;
   try {
-    var raw = await synthesizeEventForRetrieval(settings.deepseek, { title:input.title, category:input.category, date:input.date, dateSource:input.dateSource, description:input.description, categories:allCategories() }, analyses); var parsed = parseModelJson(raw); var allowedCategories = allCategories(); return { title:String(parsed.title || fallback.title).trim(), category:allowedCategories.indexOf(parsed.category) >= 0 ? parsed.category : fallback.category, date:input.date, aiDescription:String(parsed.aiDescription || fallback.aiDescription).trim(), keywords:Array.isArray(parsed.keywords) ? parsed.keywords.slice(0,12) : [], uncertainties:Array.isArray(parsed.uncertainties) ? parsed.uncertainties.filter(function (item) { return !/时间|日期/.test(item); }) : fallback.uncertainties };
+    var raw = await synthesizeEventForRetrieval(aiKeys.deepseek, { title:input.title, category:input.category, date:input.date, dateSource:input.dateSource, description:input.description, categories:allCategories() }, analyses); var parsed = parseModelJson(raw); var allowedCategories = allCategories(); return { title:String(parsed.title || fallback.title).trim(), category:allowedCategories.indexOf(parsed.category) >= 0 ? parsed.category : fallback.category, date:input.date, aiDescription:String(parsed.aiDescription || fallback.aiDescription).trim(), keywords:Array.isArray(parsed.keywords) ? parsed.keywords.slice(0,12) : [], uncertainties:Array.isArray(parsed.uncertainties) ? parsed.uncertainties.filter(function (item) { return !/时间|日期/.test(item); }) : fallback.uncertainties };
   } catch (error) { showToast('AI 摘要生成失败，已保存事实型本地摘要'); return fallback; }
 }
 function submitRecord() {
@@ -798,11 +809,11 @@ async function getChatReply(query, messages, selectedRecordIds) {
     var created = await createRecordFromChat(creation.draft);
     return { text:'已经把“' + created.title + '”创建为事件记录并放进经历库。活动日期为 ' + dateLabel(created.date) + '；之后仍可以在详情页继续补充或修改。', recs:[created.id], context:{ mode:'chat', createdRecordId:created.id } };
   }
-  var settings = getSettings(); var referenceIds = selectedRecordIds || [];
-  if (settings.deepseek) {
+  var aiKeys = getAiKeys(); var referenceIds = selectedRecordIds || [];
+  if (aiKeys.deepseek) {
     try {
       var promptMessages = messages.filter(function (m) { return !m.typing; }).map(function (m) { var names = (m.refs || []).map(function (id) { var record = getRecords().find(function (item) { return item.id === id; }); return record && record.title; }).filter(Boolean); return { role:m.role, content:(names.length ? '【本轮引用事件：' + names.join('、') + '】\n' : '') + m.text }; });
-      var raw = await chatWithDeepSeek(settings.deepseek, promptMessages, getRecords(), getNotes(), referenceIds); var parsed = parseModelJson(raw); var validIds = Array.isArray(parsed.recordIds) ? parsed.recordIds.filter(function (id) { return getRecords().some(function (r) { return r.id === id; }); }) : []; var shownIds = validIds.length ? validIds : referenceIds; var previousContext = lastChatContext(messages); var artifact = parsed.document && /^(word|pdf)$/.test(parsed.document.format || '') && parsed.document.content ? { format:parsed.document.format, title:String(parsed.document.title || 'MyArchive 对话整理'), content:String(parsed.document.content) } : null; var requestedFormat = documentFormatFromQuery(query); if (requestedFormat && !artifact) artifact = artifactFromRecords(requestedFormat, query, shownIds, parsed.reply || ''); return { text:parsed.reply || '我还在理解你的意思，可以再多告诉我一点吗？', recs:shownIds, artifact:artifact, context:{ mode:parsed.intent === 'retrieve' ? 'retrieval' : parsed.intent === 'document' ? 'document' : 'chat', stage:shownIds.length ? 'done' : 'conversation', scenario:previousContext.scenario, theme:previousContext.theme } };
+      var raw = await chatWithDeepSeek(aiKeys.deepseek, promptMessages, getRecords(), getNotes(), referenceIds); var parsed = parseModelJson(raw); var validIds = Array.isArray(parsed.recordIds) ? parsed.recordIds.filter(function (id) { return getRecords().some(function (r) { return r.id === id; }); }) : []; var shownIds = validIds.length ? validIds : referenceIds; var previousContext = lastChatContext(messages); var artifact = parsed.document && /^(word|pdf)$/.test(parsed.document.format || '') && parsed.document.content ? { format:parsed.document.format, title:String(parsed.document.title || 'MyArchive 对话整理'), content:String(parsed.document.content) } : null; var requestedFormat = documentFormatFromQuery(query); if (requestedFormat && !artifact) artifact = artifactFromRecords(requestedFormat, query, shownIds, parsed.reply || ''); return { text:parsed.reply || '我还在理解你的意思，可以再多告诉我一点吗？', recs:shownIds, artifact:artifact, context:{ mode:parsed.intent === 'retrieve' ? 'retrieval' : parsed.intent === 'document' ? 'document' : 'chat', stage:shownIds.length ? 'done' : 'conversation', scenario:previousContext.scenario, theme:previousContext.theme } };
     } catch (error) { showToast('AI 暂时不可用，已切换为本地对话模式'); }
   }
   return makeLocalReply(query, messages, referenceIds);
@@ -913,11 +924,14 @@ async function updateAttachments(recordId, field, uploads) { if (!uploads.length
 async function removeAttachment(recordId, field, attachmentIndex) { var records = getRecords(); var index = records.findIndex(function (r) { return r.id === recordId; }); var removed = records[index][field][attachmentIndex]; if (removed && typeof removed === 'object') await deleteMedia(removed.id); records[index][field].splice(attachmentIndex, 1); await saveRecords(records); showToast('附件已删除'); setTimeout(function () { location.reload(); }, 350); }
 
 function initSettings() {
-  var settings = getSettings(); document.getElementById('deepseek-key').value = settings.deepseek || ''; document.getElementById('glm-key').value = settings.glm || ''; updateCategoryList(); updateApiStatus();
-  document.getElementById('settings-form').addEventListener('submit', function (e) { e.preventDefault(); saveSettings(Object.assign({}, getSettings(), { deepseek:document.getElementById('deepseek-key').value.trim(), glm:document.getElementById('glm-key').value.trim() })); updateApiStatus(); showToast('设置已保存到当前浏览器'); });
+  var settings = getSettings(); var deepseekInput = document.getElementById('deepseek-key'); var glmInput = document.getElementById('glm-key');
+  deepseekInput.value = ENV_AI_KEYS.deepseek ? '' : settings.deepseek || ''; deepseekInput.disabled = Boolean(ENV_AI_KEYS.deepseek); if (ENV_AI_KEYS.deepseek) deepseekInput.placeholder = '已由本机环境配置';
+  glmInput.value = ENV_AI_KEYS.glm ? '' : settings.glm || ''; glmInput.disabled = Boolean(ENV_AI_KEYS.glm); if (ENV_AI_KEYS.glm) glmInput.placeholder = '已由本机环境配置';
+  updateCategoryList(); updateApiStatus();
+  document.getElementById('settings-form').addEventListener('submit', function (e) { e.preventDefault(); var current = getSettings(); saveSettings(Object.assign({}, current, { deepseek:ENV_AI_KEYS.deepseek ? current.deepseek : deepseekInput.value.trim(), glm:ENV_AI_KEYS.glm ? current.glm : glmInput.value.trim() })); updateApiStatus(); showToast('设置已保存到当前浏览器'); });
   document.getElementById('category-form').addEventListener('submit', async function (e) { e.preventDefault(); var input = document.getElementById('custom-category'); var value = input.value.trim(); if (!value) return; var next = getSettings(); next.categories = (next.categories || []).concat(value).filter(function (v,i,a) { return a.indexOf(v) === i; }); try { await saveCustomCategories(next); input.value = ''; updateCategoryList(); showToast('自定义分类已添加'); } catch (error) { showToast(error.message); } });
 }
-function updateApiStatus() { var settings = getSettings(); var status = document.getElementById('api-status'); var text = status.querySelector('.api-status-text'); var ready = Boolean(settings.deepseek || settings.glm); status.classList.toggle('ready', ready); text.textContent = ready ? '已保存 Key，本地调用接口已准备就绪' : '尚未连接真实模型，当前使用本地演示分析'; }
+function updateApiStatus() { var aiKeys = getAiKeys(); var status = document.getElementById('api-status'); var text = status.querySelector('.api-status-text'); var ready = Boolean(aiKeys.deepseek || aiKeys.glm); var fromEnvironment = Boolean(ENV_AI_KEYS.deepseek || ENV_AI_KEYS.glm); status.classList.toggle('ready', ready); text.textContent = fromEnvironment ? 'AI 已由本机环境预配置，无需手动填写 Key' : ready ? '已保存 Key，本地调用接口已准备就绪' : '尚未连接真实模型，当前使用本地演示分析'; }
 function updateCategoryList() { var list = document.getElementById('custom-category-list'); if (list) list.innerHTML = (getSettings().categories || []).map(function (c) { return '<span class="custom-category">' + esc(c) + '</span>'; }).join('') || '<span class="help-text">还没有自定义分类</span>'; }
 
 function renderIcons() {

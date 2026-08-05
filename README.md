@@ -81,11 +81,11 @@ npm run preview  # 本地预览已构建版本
 | --- | --- | --- |
 | `localStorage` | `ji-records-v1` | 经历记录本地副本与旧数据迁移来源 |
 | `localStorage` | `ji-notes-v1` | 随手记本地副本与旧数据迁移来源 |
-| `localStorage` | `ji-settings-v1` | 自定义分类与 API Key |
+| `localStorage` | `ji-settings-v1` | 自定义分类与手动 API Key 覆盖 |
 | `sessionStorage` | `ji-chat-v2` | 当前会话聊天记录 |
 | IndexedDB | `ji-media-v1` / `uploads` | 旧附件迁移来源和共享接口不可用时的兜底 |
 
-设置页中的 Key 只适合本地演示。目前请求从浏览器直接发往 DeepSeek 和 GLM，因此生产环境必须改为由受控服务端代理请求、保存密钥并执行鉴权；不要将真实生产 Key 放在浏览器中。
+比赛演示可在被 Git 忽略的 `.env.local` 中配置 `VITE_DEEPSEEK_API_KEY` 和 `VITE_GLM_API_KEY`，启动 Vite 后页面会自动使用它们，评委无需填写 Key。当前请求从浏览器直接发往 DeepSeek 和 GLM，因此生产环境必须改为由受控服务端代理请求、保存密钥并执行鉴权；不要将真实生产 Key 放在浏览器中。
 
 ## Supabase 数据库准备
 
@@ -95,7 +95,7 @@ npm run preview  # 本地预览已构建版本
 - 客户端变量模板：`.env.example`
 - 详细字段合同与双端验收：`docs/cloud-database.md`
 
-不要把数据库密码或 `service_role` Key 写入任何以 `VITE_` 开头的变量。本机只在被 Git 忽略的 `.env.local` 中配置项目 URL 与 publishable key。当前共享模式没有账号隔离：任何拿到 publishable key 的客户端都能读写整库，因此只适合个人开发演示，不能直接作为公开生产架构。
+不要把数据库密码或 `service_role` Key 写入任何以 `VITE_` 开头的变量。本机只在被 Git 忽略的 `.env.local` 中配置项目 URL、publishable key 和比赛演示用 AI Key。当前共享模式没有账号隔离：任何拿到 publishable key 的客户端都能读写整库，因此只适合个人开发演示，不能直接作为公开生产架构。
 
 ## 当前限制
 
