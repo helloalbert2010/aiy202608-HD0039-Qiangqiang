@@ -10,6 +10,7 @@ const requiredFiles = [
   'AGENTS.md',
   '.env.example',
   'package.json',
+  'vercel.json',
   'vite.config.js',
   'app.js',
   'ai-client.js',
@@ -93,6 +94,10 @@ const envExample = existsSync(envExamplePath) ? readFileSync(envExamplePath, 'ut
 for (const variable of ['VITE_SUPABASE_URL=', 'VITE_SUPABASE_PUBLISHABLE_KEY=', 'HOST=', 'PORT=', 'SUPABASE_URL=', 'SUPABASE_PUBLISHABLE_KEY=']) {
   if (!envExample.includes(variable)) fail(`.env.example is missing public variable: ${variable}`);
 }
+
+const vercelConfigPath = join(root, 'vercel.json');
+const vercelConfig = existsSync(vercelConfigPath) ? JSON.parse(readFileSync(vercelConfigPath, 'utf8')) : {};
+if (vercelConfig.cleanUrls !== true) fail('vercel.json must enable cleanUrls');
 for (const secretName of ['SERVICE_ROLE', 'DATABASE_PASSWORD']) {
   if (envExample.toUpperCase().includes(secretName)) fail(`.env.example must not contain server secret variable: ${secretName}`);
 }
@@ -119,7 +124,10 @@ for (const page of pages) {
       fail(`Unsafe local reference in ${basename(file)}: ${reference}`);
       continue;
     }
-    const resolved = normalize(join(root, assetPath));
+    const cleanPage = assetPath === '/' ? 'index' : assetPath.slice(1);
+    const resolved = pages.includes(cleanPage)
+      ? join(root, `${cleanPage}.html`)
+      : normalize(join(root, assetPath));
     if (!isInsideRoot(resolved) || !existsSync(resolved)) {
       fail(`Missing local reference in ${basename(file)}: ${reference}`);
     }

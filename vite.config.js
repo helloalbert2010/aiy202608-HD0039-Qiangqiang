@@ -10,6 +10,44 @@ const mediaDirectory = resolve(archiveDirectory, 'media');
 const archiveApiPath = '/api/archive-data';
 const mediaApiPrefix = '/api/archive-media/';
 
+function cleanPageUrlsPlugin() {
+  const pageNames = new Set(pages);
+
+  function install(server) {
+    server.middlewares.use((request, response, next) => {
+      if (request.method !== 'GET' && request.method !== 'HEAD') {
+        next();
+        return;
+      }
+
+      const url = new URL(request.url || '/', 'http://127.0.0.1');
+      const match = /^\/([^/]+?)(\.html)?$/.exec(url.pathname);
+      if (!match || !pageNames.has(match[1])) {
+        next();
+        return;
+      }
+
+      const page = match[1];
+      if (match[2] || page === 'index') {
+        response.statusCode = 308;
+        response.setHeader('Location', (page === 'index' ? '/' : '/' + page) + url.search);
+        response.setHeader('Cache-Control', 'no-store');
+        response.end();
+        return;
+      }
+
+      request.url = '/' + page + '.html' + url.search;
+      next();
+    });
+  }
+
+  return {
+    name: 'myarchive-clean-page-urls',
+    configureServer: install,
+    configurePreviewServer: install
+  };
+}
+
 function sendJson(response, status, value) {
   response.statusCode = status;
   response.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -188,7 +226,7 @@ function archiveStoragePlugin() {
 }
 
 export default defineConfig({
-  plugins: [archiveStoragePlugin()],
+  plugins: [cleanPageUrlsPlugin(), archiveStoragePlugin()],
   server: { host: '127.0.0.1' },
   preview: { host: '127.0.0.1' },
   build: {

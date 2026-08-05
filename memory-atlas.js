@@ -201,7 +201,7 @@ function initAtlas() {
   const recordLinks = document.getElementById(idPrefix + '-record-links');
   if (recordCount) recordCount.textContent = String(records.length);
   if (edgeCount) edgeCount.textContent = String(connections.length);
-  if (recordLinks) recordLinks.innerHTML = records.map((record) => '<a href="/detail.html?id=' + encodeURIComponent(record.id) + '">' + String(record.title || '未命名经历').replace(/[&<>"']/g, '') + '</a>').join('');
+  if (recordLinks) recordLinks.innerHTML = records.map((record) => '<a href="/detail?id=' + encodeURIComponent(record.id) + '">' + String(record.title || '未命名经历').replace(/[&<>"']/g, '') + '</a>').join('');
 
   const loading = document.getElementById(idPrefix + '-loading');
   if (!records.length) {
@@ -323,7 +323,7 @@ function initAtlas() {
     const hit = hitAt(event);
     pointerDown = null;
     setHovered(hit);
-    if (distance < 7 && hit) location.href = '/detail.html?id=' + encodeURIComponent(hit.userData.record.id);
+    if (distance < 7 && hit) location.href = '/detail?id=' + encodeURIComponent(hit.userData.record.id);
   });
 
   const rotationButton = document.getElementById('atlas-rotation-toggle');

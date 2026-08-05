@@ -31,17 +31,17 @@ root.outerHTML = `
             </div>
 
             <nav class="home-actions" aria-label="主要功能">
-              <a class="home-action primary" href="/record.html">
+              <a class="home-action primary" href="/record">
                 <span class="home-action-icon"><i data-lucide="pen-line"></i></span>
                 <span class="home-action-copy"><strong>开始记录</strong><small>语音 / 文字 / 上传</small></span>
                 <i data-lucide="arrow-right" class="home-action-arrow"></i>
               </a>
-              <a class="home-action" href="/chat.html">
+              <a class="home-action" href="/chat">
                 <span class="home-action-icon"><i data-lucide="message-circle"></i></span>
                 <span class="home-action-copy"><strong>与 AI 对话</strong><small>聊想法 / 找经历 / 写文书</small></span>
                 <i data-lucide="arrow-right" class="home-action-arrow"></i>
               </a>
-              <a class="home-action" href="/library.html">
+              <a class="home-action" href="/library">
                 <span class="home-action-icon"><i data-lucide="library-big"></i></span>
                 <span class="home-action-copy"><strong>我的记录</strong><small>浏览 / 筛选 / 回看</small></span>
                 <i data-lucide="arrow-right" class="home-action-arrow"></i>
@@ -69,7 +69,7 @@ root.outerHTML = `
               <header class="home-tool-title"><i data-lucide="calendar-days"></i><h2>日历视图</h2></header>
               <div class="home-tool-panel calendar-panel">
                 <div id="home-calendar"></div>
-                <a class="home-panel-link" href="/calendar.html">查看完整日历<i data-lucide="arrow-right"></i></a>
+                <a class="home-panel-link" href="/calendar">查看完整日历<i data-lucide="arrow-right"></i></a>
               </div>
             </section>
 
@@ -79,7 +79,7 @@ root.outerHTML = `
                 <div class="ai-capability"><span class="capability-icon amber"><i data-lucide="message-circle"></i></span><div><strong>对话梳理</strong><p>聊聊近况，理清问题与下一步</p></div></div>
                 <div class="ai-capability"><span class="capability-icon mint"><i data-lucide="file-search"></i></span><div><strong>经历检索</strong><p>按主题、能力和场景找到相关记录</p></div></div>
                 <div class="ai-capability"><span class="capability-icon violet"><i data-lucide="wand-sparkles"></i></span><div><strong>素材准备</strong><p>为申请文书、简历和复盘推荐经历</p></div></div>
-                <a class="home-panel-link" href="/chat.html">开始对话<i data-lucide="arrow-right"></i></a>
+                <a class="home-panel-link" href="/chat">开始对话<i data-lucide="arrow-right"></i></a>
               </div>
             </section>
           </section>
@@ -87,7 +87,7 @@ root.outerHTML = `
           <section class="recent-section">
             <div class="section-head">
               <div><span class="section-accent"></span><h2 class="section-title">最近记录</h2></div>
-              <a class="small-link" href="/library.html">查看全部 <i data-lucide="arrow-right"></i></a>
+              <a class="small-link" href="/library">查看全部 <i data-lucide="arrow-right"></i></a>
             </div>
             <div class="record-list" id="recent-records"></div>
           </section>

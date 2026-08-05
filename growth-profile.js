@@ -206,7 +206,7 @@ function evidenceCard(item, kind, dimensionLabel) {
   var explanation = isTrait
     ? '原始记录命中“' + escapeHtml((item.terms || []).join('、')) + '”，并' + (item.facts.outcome ? '写明了成果' : item.facts.action ? '写明了行动' : '提到了相关内容') + (item.facts.duration || item.facts.proof ? '，且有持续性或可证明材料。' : '。')
     : '该记录支持“' + escapeHtml(dimensionLabel) + '”；' + escapeHtml(item.parts.map(function (part) { return part.label + ' +' + part.points; }).join('，')) + '。';
-  return '<article class="growth-evidence-card"><div class="growth-evidence-card-top"><div><span class="growth-evidence-date">' + escapeHtml(record.date || '日期待补充') + '</span><h3>' + escapeHtml(record.title || '未命名经历') + '</h3></div><strong>' + contribution + '</strong></div><div class="growth-evidence-tags"><span class="primary">' + escapeHtml(dimensionLabel) + '</span>' + terms + '</div><p class="growth-evidence-explanation">' + explanation + '</p><blockquote>' + escapeHtml(record.description || '这条记录还没有原始描述。') + '</blockquote><div class="growth-evidence-meta"><span>' + escapeHtml(meta) + '</span><a href="/detail.html?id=' + encodeURIComponent(record.id || '') + '">查看来源记录 →</a></div></article>';
+  return '<article class="growth-evidence-card"><div class="growth-evidence-card-top"><div><span class="growth-evidence-date">' + escapeHtml(record.date || '日期待补充') + '</span><h3>' + escapeHtml(record.title || '未命名经历') + '</h3></div><strong>' + contribution + '</strong></div><div class="growth-evidence-tags"><span class="primary">' + escapeHtml(dimensionLabel) + '</span>' + terms + '</div><p class="growth-evidence-explanation">' + explanation + '</p><blockquote>' + escapeHtml(record.description || '这条记录还没有原始描述。') + '</blockquote><div class="growth-evidence-meta"><span>' + escapeHtml(meta) + '</span><a href="/detail?id=' + encodeURIComponent(record.id || '') + '">查看来源记录 →</a></div></article>';
 }
 
 export function initGrowthProfile(options) {
@@ -265,7 +265,7 @@ export function initGrowthProfile(options) {
       summary = profile.currentYear + ' 年 ' + selected.current + ' 分 − ' + profile.baselineYear + ' 年 ' + selected.baseline + ' 分 = ' + scoreSign(selected.difference) + (selected.baseline === 0 && selected.current > 0 ? '（新拓展领域）' : '');
     }
     document.getElementById('growth-evidence-summary').textContent = summary;
-    document.getElementById('growth-evidence-grid').innerHTML = evidence.length ? evidence.map(function (item) { return evidenceCard(item, state.activeKind, selected.label); }).join('') : '<div class="growth-empty-evidence"><h3>这个维度还没有可追溯证据</h3><p>' + escapeHtml(state.activeKind === 'trait' ? TRAIT_SUGGESTIONS[selected.id] : '可以补充一条与该领域相关、写清行动和结果的经历。') + '</p><a class="btn btn-secondary" href="/record.html">记录一段新经历</a></div>';
+    document.getElementById('growth-evidence-grid').innerHTML = evidence.length ? evidence.map(function (item) { return evidenceCard(item, state.activeKind, selected.label); }).join('') : '<div class="growth-empty-evidence"><h3>这个维度还没有可追溯证据</h3><p>' + escapeHtml(state.activeKind === 'trait' ? TRAIT_SUGGESTIONS[selected.id] : '可以补充一条与该领域相关、写清行动和结果的经历。') + '</p><a class="btn btn-secondary" href="/record">记录一段新经历</a></div>';
   }
 
   function renderProfile() {

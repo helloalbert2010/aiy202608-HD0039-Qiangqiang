@@ -37,18 +37,20 @@ npm run verify:mobile-api  # 对正在运行的 8787 API 执行真实云端合�
 
 ## 页面与入口
 
-| 路径 | 作用 |
-| --- | --- |
-| `index.html` | 首页，唯一的首页实现 |
-| `record.html` | 新建经历、上传资料、生成摘要 |
-| `library.html` | 经历库与筛选 |
-| `detail.html?id=...` | 记录详情、编辑和附件管理 |
-| `chat.html` | 与经历助手对话和检索 |
-| `calendar.html` | 按日期查看事件与随手记 |
-| `notes.html` | 按时间查看所有随手记正文 |
-| `atlas.html` | 事件关系星球 |
-| `growth.html` | 个人成长画像、特质雷达与年度认知边界对比 |
-| `settings.html` | 兼容入口，访问后自动回到首页 |
+| URL | 入口文件 | 作用 |
+| --- | --- | --- |
+| `/` | `index.html` | 首页，唯一的首页实现 |
+| `/record` | `record.html` | 新建经历、上传资料、生成摘要 |
+| `/library` | `library.html` | 经历库与筛选 |
+| `/detail?id=...` | `detail.html` | 记录详情、编辑和附件管理 |
+| `/chat` | `chat.html` | 与经历助手对话和检索 |
+| `/calendar` | `calendar.html` | 按日期查看事件与随手记 |
+| `/notes` | `notes.html` | 按时间查看所有随手记正文 |
+| `/atlas` | `atlas.html` | 事件关系星球 |
+| `/growth` | `growth.html` | 个人成长画像、特质雷达与年度认知边界对比 |
+| `/settings` | `settings.html` | 兼容入口，访问后自动回到首页 |
+
+线上由 Vercel `cleanUrls` 提供无 `.html` 后缀路由，本地开发和预览服务提供相同映射；旧 `.html` 地址会重定向到对应的干净 URL。
 
 首页仅由 `home.js` 和 `home.css` 实现。不要再添加方案编号页面或方案选择页；历史十套首页设计已移出工作区并归档。
 
