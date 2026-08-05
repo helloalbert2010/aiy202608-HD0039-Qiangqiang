@@ -23,6 +23,8 @@
             <div class="chat-references" id="chat-references" aria-label="正在追问的事件" hidden></div>
             <textarea id="chat-input" rows="1" maxlength="4000" placeholder="和我聊聊，或告诉我你想找什么" aria-label="对话内容"></textarea>
           </div>
+          <span class="sr-only" id="chat-voice-status" aria-live="polite"></span>
+          <button class="chat-voice" id="chat-voice" type="button" title="语音输入" aria-label="语音输入" aria-pressed="false"><i data-lucide="mic"></i></button>
           <button class="send-btn" type="submit" title="发送" aria-label="发送"><i data-lucide="arrow-up"></i></button>
         </form>
       </section>

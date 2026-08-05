@@ -456,30 +456,32 @@ function initHome() {
 }
 
 function setupNoteVoice(button, status, target) {
-  var recorder; var chunks = []; var stream; var startedAt; var clock; var limitTimer;
+  var recorder; var chunks = []; var stream; var startedAt; var clock; var limitTimer; var transcribing = false;
   button.addEventListener('click', async function () {
+    if (transcribing) return;
     if (recorder && recorder.state === 'recording') { recorder.stop(); return; }
     if (!navigator.mediaDevices || !window.MediaRecorder) { showToast('当前浏览器不支持录音'); return; }
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio:true });
-      chunks = []; startedAt = Date.now(); recorder = new MediaRecorder(stream);
-      recorder.ondataavailable = function (event) { if (event.data.size) chunks.push(event.data); };
+      chunks = []; startedAt = Date.now(); recorder = new MediaRecorder(stream); var activeRecorder = recorder; var activeStream = stream; var activeChunks = chunks;
+      recorder.ondataavailable = function (event) { if (event.data.size) activeChunks.push(event.data); };
       recorder.onstop = async function () {
-        clearInterval(clock); clearTimeout(limitTimer); stream.getTracks().forEach(function (track) { track.stop(); }); button.classList.remove('recording'); button.setAttribute('aria-label', '语音转文字');
+        clearInterval(clock); clearTimeout(limitTimer); activeStream.getTracks().forEach(function (track) { track.stop(); }); stream = null; button.classList.remove('recording'); button.setAttribute('aria-label', '语音转文字'); button.setAttribute('aria-pressed', 'false'); transcribing = true; button.disabled = true;
         var aiKeys = getAiKeys();
-        if (!aiKeys.glm) { status.textContent = '请先在设置中填写 GLM Key'; showToast('录音已完成，配置 GLM Key 后可转成文字'); return; }
+        if (!aiKeys.glm) { status.textContent = '请先在设置中填写 GLM Key'; showToast('录音已完成，配置 GLM Key 后可转成文字'); transcribing = false; button.disabled = false; return; }
         try {
           status.textContent = '正在转成文字…';
-          var blob = new Blob(chunks, { type:recorder.mimeType || 'audio/webm' });
+          var blob = new Blob(activeChunks, { type:activeRecorder.mimeType || 'audio/webm' });
           var transcript = await transcribeAudioSequentially(aiKeys.glm, await audioBlobToWav(blob), { filename:'quick-note.wav', onProgress:function (index, total) { status.textContent = total > 1 ? '识别第 ' + index + ' / ' + total + ' 段…' : '正在转成文字…'; } });
           target.value = [target.value.trim(), transcript].filter(Boolean).join('\n');
-          status.textContent = '已加入文本框'; target.focus();
+          target.dispatchEvent(new Event('input', { bubbles:true })); status.textContent = '已加入文本框'; target.focus();
         } catch (error) { status.textContent = '转写失败'; showToast('语音转写失败：' + error.message); }
+        finally { transcribing = false; button.disabled = false; }
       };
-      recorder.start(1000); button.classList.add('recording'); button.setAttribute('aria-label', '停止录音'); status.textContent = '正在录音 · 00:00';
+      recorder.start(1000); button.classList.add('recording'); button.setAttribute('aria-label', '停止录音'); button.setAttribute('aria-pressed', 'true'); status.textContent = '正在录音 · 00:00';
       clock = setInterval(function () { var seconds = Math.floor((Date.now() - startedAt) / 1000); status.textContent = '正在录音 · ' + String(Math.floor(seconds / 60)).padStart(2, '0') + ':' + String(seconds % 60).padStart(2, '0'); }, 1000);
-      limitTimer = setTimeout(function () { if (recorder.state === 'recording') recorder.stop(); }, 600000);
-    } catch (error) { status.textContent = '无法使用麦克风'; showToast('请检查浏览器的麦克风权限'); }
+      limitTimer = setTimeout(function () { if (activeRecorder.state === 'recording') activeRecorder.stop(); }, 600000);
+    } catch (error) { if (stream) stream.getTracks().forEach(function (track) { track.stop(); }); stream = null; button.classList.remove('recording'); button.setAttribute('aria-label', '语音转文字'); button.setAttribute('aria-pressed', 'false'); status.textContent = '无法使用麦克风'; showToast('请检查浏览器的麦克风权限'); }
   });
 }
 
@@ -854,6 +856,7 @@ function renderChat() {
 function initChat() {
   var form = document.getElementById('chat-form'); var input = document.getElementById('chat-input'); var sendButton = form.querySelector('.send-btn'); var messagesBox = document.getElementById('messages'); var referencesBox = document.getElementById('chat-references');
   function resizeInput() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 116) + 'px'; input.style.overflowY = input.scrollHeight > 116 ? 'auto' : 'hidden'; }
+  setupNoteVoice(document.getElementById('chat-voice'), document.getElementById('chat-voice-status'), input);
   async function send() {
     var q = input.value.trim(); if (!q || sendButton.disabled) return; var now = new Date().toISOString(); var messages = getChatMessages(); var selectedIds = chatReferenceIds.slice();
     messages.push({ role:'user', text:q, refs:selectedIds, createdAt:now }); messages.push({ role:'assistant', typing:true, createdAt:now }); saveChatMessages(messages); input.value = ''; chatReferenceIds = []; resizeInput(); sendButton.disabled = true; renderChat();

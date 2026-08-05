@@ -333,6 +333,12 @@ input:focus, textarea:focus, select:focus { border-color:#8d80ec; box-shadow:0 0
 .chat-input textarea { min-height:42px; max-height:116px; padding:10px 0; border:0; background:transparent; resize:none; overflow-y:hidden; scrollbar-width:none; }
 .chat-input textarea::-webkit-scrollbar { display:none; }
 .chat-input textarea:focus { box-shadow:none; }
+.chat-voice { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; border-radius:50%; color:#8e93a2; background:transparent; }
+.chat-voice:hover { color:var(--green); background:var(--green-soft); }
+.chat-voice.recording { color:#fff; background:#d85d57; box-shadow:0 0 0 4px rgba(216,93,87,.12); }
+.chat-voice.recording:hover { color:#fff; background:#c84b45; }
+.chat-voice:disabled { cursor:wait; opacity:.6; }
+.chat-voice svg { width:18px; height:18px; }
 .send-btn { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; border-radius:50%; background:var(--green); color:#fff; }
 .send-btn:hover { background:#5849db; }
 .send-btn:disabled { cursor:wait; opacity:.6; }
