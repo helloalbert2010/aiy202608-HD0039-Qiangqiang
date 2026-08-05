@@ -10,7 +10,7 @@
 - 共享 Supabase 数据库：project ref `wpekwxjyniytfciemymk`，区域 `ap-northeast-1`（Tokyo）。
 - Web 与 API 是否确认读写同一张 `records` 表：**是**。API 通过同一 Supabase 项目的 `records`、`notes`、`categories` 读写；Web 仍由 `cloud-store.js` 直接读取同一组表。
 - API 服务代码：`C:\Users\杨博夫\Documents\经历平台MVP\mobile-api\`。
-- 当前实现 commit：本回执与实现代码一并提交；最终 hash 将在交付提交完成后回填。
+- 当前实现 commit：`3e296a5`（本次交付的实现提交）。
 - 本次未完成项：本机没有 MuMu/ADB，无法执行实体模拟器的 `adb reverse` 验收；实体手机没有可用的 LAN/HTTPS 地址。
 
 ## 2. 服务位置与启动
