@@ -1,0 +1,45 @@
+plugins {
+    id 'com.android.application'
+}
+
+def envValues = [:]
+def envFile = file("${rootDir}/../.env.local")
+if (envFile.exists()) {
+    envFile.eachLine { line ->
+        def match = line =~ /^\s*([^#=]+?)\s*=\s*(.*)\s*$/
+        if (match.find()) envValues[match.group(1).trim()] = match.group(2).trim()
+    }
+}
+def supabaseUrl = envValues['VITE_SUPABASE_URL'] ?: System.getenv('VITE_SUPABASE_URL') ?: ''
+def supabaseKey = envValues['VITE_SUPABASE_PUBLISHABLE_KEY'] ?: System.getenv('VITE_SUPABASE_PUBLISHABLE_KEY') ?: ''
+def deepseekKey = envValues['VITE_DEEPSEEK_API_KEY'] ?: System.getenv('VITE_DEEPSEEK_API_KEY') ?: ''
+def glmKey = envValues['VITE_GLM_API_KEY'] ?: System.getenv('VITE_GLM_API_KEY') ?: ''
+def buildConfigString = { value -> '"' + value.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n') + '"' }
+
+android {
+    namespace 'com.myarchive.mobile'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.myarchive.mobile'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
+        buildConfigField 'String', 'SUPABASE_URL', buildConfigString(supabaseUrl)
+        buildConfigField 'String', 'SUPABASE_PUBLISHABLE_KEY', buildConfigString(supabaseKey)
+        buildConfigField 'String', 'DEEPSEEK_API_KEY', buildConfigString(deepseekKey)
+        buildConfigField 'String', 'GLM_API_KEY', buildConfigString(glmKey)
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}

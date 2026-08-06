@@ -40,6 +40,24 @@
 
 在线版是无登录共享演示环境。请只使用脱敏测试数据，不要输入姓名、联系方式、证件、健康信息、账号密码或未公开申请材料。
 
+## Android 安装包
+
+- 可直接安装的 APK：[`android-app/MyArchive-mobile.apk`](android-app/MyArchive-mobile.apk)
+- 包名：`com.myarchive.mobile`
+- SHA-256：`82D05412B5AB8E667E15D6EFDF08E1DD5F3C771F557251FA5D8483A197D33CEB`
+- 手机端直接调用同一套 Supabase `records` / `notes` 数据表，Web 与 Android 共享记录和随手记。
+- 事件记录已对齐 Web 端核心流程：文本整理、图片分析、PDF/DOC/DOCX 文件提取分析、GLM 语音转写、DeepSeek 结构化分析，AI 分析完成后写入数据库。
+- 首页保留 MyArchive 品牌、Web 同款 Slogan、大号事件记录入口和随手记输入区，不额外增加 Dashboard。
+
+本地重新构建 APK：
+
+```powershell
+cd android-app
+gradle assembleRelease
+```
+
+构建产物会复制为 `android-app/MyArchive-mobile.apk`，用于实机安装和 GitHub 下载。
+
 ## 用到的技术 / AI 工具
 
 - Vite 多页面客户端、JavaScript、CSS

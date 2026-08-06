@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>经历</title>
+  <style>
+    :root { --canvas:#fafaff; --surface:#fff; --ink:#202432; --muted:#8b90a1; --line:#ececf4; --purple:#6657e8; --purple-dark:#5849db; --purple-soft:#f0edff; --amber:#e3a32f; --amber-soft:#fff7e4; --green:#37a974; --danger:#d85d57; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; min-height:100%; background:var(--canvas); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; -webkit-tap-highlight-color:transparent; }
+    body { padding-top:max(24px, env(safe-area-inset-top)); padding-bottom:82px; }
+    button,input,textarea,select { font:inherit; }
+    button { border:0; cursor:pointer; }
+    .file-input { display:none; }
+    .topbar { position:sticky; top:0; z-index:5; display:flex; align-items:center; justify-content:space-between; min-height:70px; padding:16px 20px 12px; background:rgba(250,250,255,.94); backdrop-filter:blur(16px); border-bottom:1px solid rgba(236,236,244,.8); }
+    .brand { display:flex; align-items:center; gap:11px; }
+    .brand-mark { width:34px; height:34px; display:grid; place-items:center; border-radius:10px; color:#fff; background:var(--purple); font-weight:800; font-size:17px; box-shadow:0 7px 16px rgba(102,87,232,.25); }
+    .brand-copy strong { display:block; font-size:16px; letter-spacing:.03em; }
+    .brand-copy span { display:block; margin-top:2px; color:var(--muted); font-size:10px; }
+    .top-date { color:var(--muted); font-size:11px; text-align:right; line-height:1.45; }
+    .top-date b { display:block; color:var(--ink); font-size:12px; font-weight:650; }
+    main { width:min(100%, 720px); margin:0 auto; padding:0 18px 34px; }
+    .view { display:none; animation:fadein .2s ease; }
+    .view.active { display:block; }
+    .mobile-brand { display:flex; align-items:center; gap:12px; padding:12px 0 24px; }
+    .mobile-brand img { width:38px; height:38px; object-fit:contain; }
+    .mobile-brand strong { color:var(--ink); font-size:22px; letter-spacing:.01em; }
+    @keyframes fadein { from { opacity:0; transform:translateY(3px); } to { opacity:1; transform:none; } }
+    .eyebrow { color:var(--purple); font-size:10px; letter-spacing:.14em; font-weight:750; }
+    h1,h2,h3,p { margin:0; }
+    .home-title { margin-top:10px; font-size:36px; line-height:1.2; letter-spacing:-.03em; }
+    .home-subtitle { max-width:34em; margin-top:12px; color:var(--muted); font-size:14px; line-height:1.7; }
+    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:24px 0 18px; }
+    .stat { padding:13px 13px 12px; background:var(--surface); border:1px solid var(--line); border-radius:10px; }
+    .stat small { display:block; color:var(--muted); font-size:10px; }
+    .stat strong { display:block; margin-top:5px; color:var(--ink); font-size:23px; font-weight:750; }
+    .section-head { display:flex; align-items:center; justify-content:space-between; margin:23px 0 10px; }
+    .section-head h2 { font-size:15px; font-weight:750; }
+    .section-link { color:var(--purple); background:none; font-size:11px; padding:5px 0; }
+    .record-hero { display:flex; align-items:center; gap:16px; width:100%; min-height:126px; padding:20px; margin-top:22px; border-radius:16px; color:#fff; background:var(--purple); text-align:left; box-shadow:0 16px 32px rgba(102,87,232,.24); }
+    .record-hero:active { transform:translateY(1px); background:var(--purple-dark); }
+    .hero-icon { width:54px; height:54px; flex:0 0 54px; display:grid; place-items:center; border-radius:14px; background:rgba(255,255,255,.17); font-size:30px; }
+    .record-hero strong { display:block; font-size:19px; }
+    .record-hero span { display:block; margin-top:6px; color:rgba(255,255,255,.77); font-size:12px; }
+    .record-hero .arrow { margin-left:auto; font-size:31px; }
+    .panel { padding:18px; background:var(--surface); border:1px solid var(--line); border-radius:14px; }
+    .panel-title { display:flex; align-items:center; gap:8px; }
+    .panel-title .panel-icon { width:28px; height:28px; display:grid; place-items:center; border-radius:8px; color:var(--amber); background:var(--amber-soft); font-size:16px; }
+    .panel-title strong { font-size:13px; }
+    .panel-title span { margin-left:auto; color:var(--muted); font-size:10px; }
+    .jot-row { display:flex; gap:9px; align-items:flex-end; margin-top:13px; }
+    textarea,input,select { width:100%; border:1px solid var(--line); outline:0; color:var(--ink); background:#fafafd; border-radius:8px; transition:border-color .15s,box-shadow .15s; }
+    textarea:focus,input:focus,select:focus { border-color:#bdb5fb; box-shadow:0 0 0 3px rgba(102,87,232,.1); }
+    textarea { resize:none; line-height:1.6; }
+    .jot-input { min-height:105px; padding:13px; font-size:14px; }
+    .voice-button { width:58px; height:58px; flex:0 0 58px; display:grid; place-items:center; border-radius:12px; color:#fff; background:var(--purple); font-size:20px; }
+    .mic-svg { width:27px; height:27px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .voice-button:active { background:var(--purple-dark); }
+    .voice-button.recording { background:var(--danger); box-shadow:0 0 0 4px rgba(216,93,87,.13); }
+    .composer-footer { display:flex; align-items:center; gap:10px; margin-top:12px; }
+    .composer-hint { flex:1; overflow:hidden; color:var(--muted); font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+    .primary-button,.secondary-button,.danger-button { min-height:38px; padding:0 15px; border-radius:8px; font-size:12px; font-weight:650; }
+    .primary-button { color:#fff; background:var(--purple); }
+    .primary-button:active { background:var(--purple-dark); }
+    .secondary-button { color:var(--purple); background:var(--purple-soft); }
+    .danger-button { color:var(--danger); background:#fff0ef; }
+    .empty { padding:26px 10px; color:var(--muted); font-size:12px; text-align:center; }
+    .record-list,.note-list { display:grid; gap:9px; }
+    .record-card,.note-card { padding:14px; background:var(--surface); border:1px solid var(--line); border-radius:10px; }
+    .record-card { display:flex; align-items:flex-start; gap:11px; }
+    .record-dot { width:8px; height:8px; margin-top:5px; flex:0 0 8px; border-radius:50%; background:var(--purple); box-shadow:0 0 0 4px var(--purple-soft); }
+    .record-card-main { min-width:0; flex:1; }
+    .record-card-title { display:block; overflow:hidden; font-size:13px; font-weight:700; text-overflow:ellipsis; white-space:nowrap; }
+    .record-card-meta { display:flex; gap:8px; margin-top:6px; color:var(--muted); font-size:10px; }
+    .record-card-desc { display:-webkit-box; overflow:hidden; margin-top:8px; color:#5d6272; font-size:11px; line-height:1.55; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+    .note-card { border-left:3px solid #efc66b; }
+    .note-card p { color:#505563; font-size:12px; line-height:1.65; white-space:pre-wrap; }
+    .note-card time { display:block; margin-top:8px; color:var(--muted); font-size:10px; }
+    .form-title { display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+    .back-button { width:32px; height:32px; display:grid; place-items:center; color:var(--ink); background:var(--surface); border:1px solid var(--line); border-radius:8px; font-size:18px; }
+    .form-title h1 { font-size:22px; }
+    .form-title p { margin-top:4px; color:var(--muted); font-size:11px; }
+    .form-panel { padding:18px 16px; background:var(--surface); border:1px solid var(--line); border-radius:11px; }
+    .field { margin-bottom:15px; }
+    .field:last-of-type { margin-bottom:0; }
+    .field label { display:block; margin-bottom:7px; color:#5b6070; font-size:11px; font-weight:650; }
+    .field input,.field select { height:42px; padding:0 11px; font-size:13px; }
+    .field textarea { min-height:180px; padding:12px; font-size:13px; }
+    .record-voice-row { display:flex; align-items:center; gap:10px; margin-top:9px; }
+    .record-voice-row .voice-button { width:46px; height:46px; flex-basis:46px; }
+    .record-voice-row .mic-svg { width:22px; height:22px; }
+    .record-voice-help { color:var(--muted); font-size:10px; }
+    .record-capture { padding:14px; background:#fafafd; border:1px solid var(--line); border-radius:10px; }
+    .record-capture.is-recording { border-color:#efaaa6; box-shadow:0 0 0 3px rgba(216,93,87,.08); }
+    .record-capture-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .record-capture-head label { margin:0; color:var(--ink); font-size:13px; }
+    .capture-kicker { display:block; margin-bottom:4px; color:var(--purple); font-size:9px; font-weight:750; letter-spacing:.08em; }
+    .record-voice-action { width:auto; min-width:104px; height:46px; padding:0 12px; display:flex; gap:7px; font-size:10px; }
+    .record-voice-action .mic-svg { width:20px; height:20px; }
+    .record-voice-action.recording { background:var(--danger); }
+    .record-voice-status { display:block; margin-top:9px; min-height:16px; color:var(--muted); font-size:10px; line-height:1.5; }
+    .category-row { display:flex; gap:8px; }
+    .category-row select { flex:1; }
+    .mini-add { width:42px; height:42px; flex:0 0 42px; color:var(--purple); background:var(--purple-soft); border-radius:8px; font-size:21px; }
+    .attachment-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .attachment-choice { display:flex; align-items:center; gap:10px; min-height:82px; padding:12px; color:var(--ink); background:#fafafd; border:1px dashed #d9d7e8; border-radius:10px; }
+    .attachment-choice:active { border-color:var(--purple); background:var(--purple-soft); }
+    .attachment-choice .attachment-icon { width:34px; height:34px; display:grid; place-items:center; color:var(--purple); background:var(--purple-soft); border-radius:9px; font-size:19px; }
+    .attachment-choice strong { display:block; font-size:12px; }
+    .attachment-choice small { display:block; margin-top:4px; color:var(--muted); font-size:9px; }
+    .attachment-list { display:grid; gap:6px; margin-top:9px; }
+    .attachment-chip { display:flex; align-items:center; gap:8px; padding:9px 10px; color:#5b6070; background:#fafafd; border:1px solid var(--line); border-radius:8px; font-size:11px; }
+    .attachment-chip span:last-child { margin-left:auto; color:var(--muted); font-size:10px; }
+    .form-actions { display:flex; gap:9px; margin-top:18px; }
+    .form-actions button { flex:1; }
+    .form-note { display:block; margin-top:10px; color:var(--muted); font-size:9px; line-height:1.5; text-align:center; }
+    .analysis-progress { display:none; }
+    .analysis-progress.show { display:block; }
+    .analysis-progress h3 { margin-bottom:15px; font-size:17px; }
+    .analysis-step { display:flex; align-items:center; gap:11px; min-height:52px; padding:10px 0; color:var(--muted); border-bottom:1px solid var(--line); font-size:11px; }
+    .analysis-step:last-of-type { border-bottom:0; }
+    .step-status { width:28px; height:28px; flex:0 0 28px; display:grid; place-items:center; border-radius:50%; color:var(--muted); background:#f0f0f6; font-size:11px; font-weight:750; }
+    .analysis-step.running { color:var(--ink); font-weight:650; }
+    .analysis-step.running .step-status { color:#fff; background:var(--purple); animation:pulse 1s ease-in-out infinite; }
+    .analysis-step.done { color:var(--green); }
+    .analysis-step.done .step-status { color:#fff; background:var(--green); }
+    @keyframes pulse { 50% { opacity:.62; } }
+    .analysis-success { display:none; margin-top:18px; padding:15px; background:#eef9f3; border:1px solid #caead8; border-radius:10px; }
+    .analysis-success.show { display:block; }
+    .analysis-success strong { display:block; color:#237950; font-size:13px; }
+    .analysis-success span { display:block; margin-top:6px; color:#5c7367; font-size:10px; line-height:1.55; }
+    .analysis-success .form-actions { margin-top:13px; }
+    .analysis-error { display:none; margin-top:16px; padding:13px; color:var(--danger); background:#fff0ef; border-radius:8px; font-size:11px; line-height:1.5; }
+    .analysis-error.show { display:block; }
+    .view-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:18px; }
+    .view-header h1 { margin-top:7px; font-size:24px; }
+    .view-header p { margin-top:6px; color:var(--muted); font-size:11px; }
+    .tabs { display:flex; gap:5px; padding:4px; margin-bottom:15px; border-radius:9px; background:#efeff6; }
+    .tab { flex:1; min-height:32px; color:var(--muted); background:transparent; border-radius:7px; font-size:11px; }
+    .tab.active { color:var(--ink); background:var(--surface); box-shadow:0 2px 8px rgba(32,36,50,.06); font-weight:700; }
+    .bottom-nav { position:fixed; z-index:10; right:0; bottom:0; left:0; display:grid; grid-template-columns:repeat(4,1fr); padding:8px max(12px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-right)); background:rgba(255,255,255,.96); border-top:1px solid var(--line); backdrop-filter:blur(18px); }
+    .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; min-height:48px; color:#9b9eab; background:transparent; font-size:10px; }
+    .nav-item .nav-icon { width:29px; height:25px; display:grid; place-items:center; border-radius:8px; font-size:18px; }
+    .nav-item.active { color:var(--purple); font-weight:650; }
+    .nav-item.active .nav-icon { background:var(--purple-soft); }
+    .toast { position:fixed; z-index:20; right:18px; bottom:92px; left:18px; padding:11px 13px; color:#fff; background:#292c3a; border-radius:8px; box-shadow:0 8px 22px rgba(32,36,50,.22); font-size:12px; text-align:center; opacity:0; transform:translateY(8px); pointer-events:none; transition:opacity .2s,transform .2s; }
+    .toast.show { opacity:1; transform:none; }
+    @media (min-width:600px) { main { padding-left:26px; padding-right:26px; } .topbar { padding-left:30px; padding-right:30px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="view active" id="home-view">
+      <div class="mobile-brand"><img src="logo.png" alt="MyArchive logo"><strong>MyArchive</strong></div>
+      <h1 class="home-title">把今天的经历，<br>留给未来的自己。</h1>
+      <p class="home-subtitle">今天留下的每一道轨迹，都会在未来重新照亮你。</p>
+      <button class="record-hero" data-go="record"><span class="hero-icon">＋</span><span><strong>开始记录</strong><span>语音 / 文字 / 上传</span></span><b class="arrow">›</b></button>
+      <div class="section-head"><h2>此刻，最想留下什么？</h2></div>
+      <div class="panel">
+        <div class="panel-title"><span class="panel-icon">✎</span><strong>一句感受、一个念头，也可以成为经历的起点。</strong></div>
+        <div class="jot-row"><textarea id="home-note-input" class="jot-input" placeholder="记下此刻的想法…"></textarea><button class="voice-button" data-voice-target="home-note-input" aria-label="语音转文字"><svg class="mic-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3M8 21h8"/></svg></button></div>
+        <div class="composer-footer"><span id="home-note-status" class="composer-hint">支持文字和语音输入</span><button class="primary-button" id="home-note-save">保存随手记</button></div>
+      </div>
+    </section>
+
+    <section class="view" id="record-view">
+      <div class="form-title"><button class="back-button" data-go="home">‹</button><div><h1>记录一段新经历</h1><p>语音、文字、文件、照片至少提供一项</p></div></div>
+      <form id="record-form" class="form-panel" novalidate>
+        <div id="record-form-content">
+          <div class="field record-capture" id="record-capture-field"><div class="record-capture-head"><div><span class="capture-kicker">AI 语音记录 · GLM-ASR-2512</span><label for="record-description">发生了什么？</label></div><button type="button" id="record-voice-button" class="voice-button record-voice-action" data-voice-target="record-description" aria-label="开始录音"><svg class="mic-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3M8 21h8"/></svg><span>开始录音</span></button></div><textarea id="record-description" maxlength="12000" placeholder="可以直接说，也可以输入：发生了什么、你做了什么、结果和感受……"></textarea><span id="record-voice-status" class="record-voice-status">单次最长 10 分钟，长录音会按顺序分段识别</span></div>
+          <div class="field"><label for="record-title">事件标题 <span class="record-voice-help">可由 AI 生成</span></label><input id="record-title" maxlength="80" placeholder="例如：第一次担任社团招新负责人"></div>
+          <div class="field"><label for="record-date">活动时间 <span class="record-voice-help">默认今天，文字有明确日期时自动调整</span></label><input id="record-date" type="date"></div>
+          <div class="field"><label for="record-category">活动分类 <span class="record-voice-help">可由 AI 判断</span></label><div class="category-row"><select id="record-category"></select><button type="button" class="mini-add" id="record-add-category" aria-label="创建新分类">+</button></div></div>
+          <div class="field"><label>相关文档 <span class="record-voice-help">PDF / DOC / DOCX，单个不超过 20 MB</span></label><label class="attachment-choice" for="record-files"><span class="attachment-icon">▤</span><span><strong>选择活动文档</strong><small>AI 将读取内容并提取事实</small></span></label><input id="record-files" class="file-input" type="file" accept=".pdf,.doc,.docx" multiple></div>
+          <div class="field"><label>照片 <span class="record-voice-help">JPG / PNG / HEIC，最多 12 张</span></label><label class="attachment-choice" for="record-photos"><span class="attachment-icon">▧</span><span><strong>选择活动照片</strong><small>GLM 将逐张分析可见事实</small></span></label><input id="record-photos" class="file-input" type="file" accept="image/*" multiple><div id="record-attachment-list" class="attachment-list"></div></div>
+          <div class="form-actions"><button type="button" class="secondary-button" data-go="home">取消</button><button type="submit" class="primary-button">保存并让 AI 整理</button></div><span class="form-note">文字、文档、照片和最终摘要依次分析，不会并发占用同一个 Key</span>
+        </div>
+        <div id="record-analysis-progress" class="analysis-progress"><h3>正在整理这段经历</h3><div class="analysis-step" data-analysis-step="text"><span class="step-status">1</span><span>分析文字、语音和基础字段</span></div><div class="analysis-step" data-analysis-step="documents"><span class="step-status">2</span><span>读取并分析文档内容</span></div><div class="analysis-step" data-analysis-step="photos"><span class="step-status">3</span><span>逐张理解照片与现场线索</span></div><div class="analysis-step" data-analysis-step="synthesis"><span class="step-status">4</span><span>生成标题、分类、日期和事实摘要并上传</span></div><div id="record-success" class="analysis-success"><strong>记录成功，已写入共享经历库</strong><span id="record-success-note"></span><div class="form-actions"><button type="button" class="secondary-button" id="record-again">继续记录</button><button type="button" class="primary-button" data-go="library">查看记录</button></div></div><div id="record-error" class="analysis-error"></div></div>
+      </form>
+    </section>
+
+    <section class="view" id="notes-view">
+      <div class="view-header"><div><div class="eyebrow">QUICK NOTES</div><h1>随手记</h1><p>不必完整，先把念头留下来。</p></div><button class="secondary-button" data-go="home">‹ 首页</button></div>
+      <div class="section-head"><h2>全部随手记</h2><span id="notes-total" class="composer-hint"></span></div>
+      <div id="notes-list" class="note-list"></div>
+    </section>
+
+    <section class="view" id="library-view">
+      <div class="view-header"><div><div class="eyebrow">MY ARCHIVE</div><h1>我的记录</h1><p>所有经历和随手记都在这里。</p></div><button class="primary-button" data-go="record">＋ 记录</button></div>
+      <div class="tabs"><button class="tab active" data-library-tab="records">经历记录</button><button class="tab" data-library-tab="notes">随手记</button></div>
+      <div id="library-records" class="record-list"></div><div id="library-notes" class="note-list" style="display:none"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="主导航">
+    <button class="nav-item active" data-go="home"><span class="nav-icon">⌂</span><span>首页</span></button>
+    <button class="nav-item" data-go="record"><span class="nav-icon">＋</span><span>记经历</span></button>
+    <button class="nav-item" data-go="notes"><span class="nav-icon">✎</span><span>随手记</span></button>
+    <button class="nav-item" data-go="library"><span class="nav-icon">▤</span><span>我的记录</span></button>
+  </nav>
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="mobile-ai.js"></script>
+  <script src="mobile-app.js"></script>
+  <script>
+    (function () {
+      'use strict';
+      if (window.MyArchiveMobileApp) { window.MyArchiveMobileApp.start(); return; }
+      var RECORDS_KEY = 'ji-records-v1';
+      var NOTES_KEY = 'ji-notes-v1';
+      var currentView = 'home';
+      var voiceTargetId = '';
+      var toastTimer;
+      var cloud = { url:'', key:'', configured:false, online:false, syncing:false };
+
+      function read(key) { try { var value = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(value) ? value : []; } catch (_) { return []; } }
+      function write(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+      function records() { return read(RECORDS_KEY).sort(function (a,b) { return Date.parse(b.createdAt || b.date || 0) - Date.parse(a.createdAt || a.date || 0); }); }
+      function notes() { return read(NOTES_KEY).sort(function (a,b) { return Date.parse(b.createdAt || b.date || 0) - Date.parse(a.createdAt || a.date || 0); }); }
+      function esc(value) { return String(value == null ? '' : value).replace(/[&<>"']/g, function (ch) { return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch]; }); }
+      function dateText(value) { if (!value) return '时间待补充'; var date = new Date(value.length === 10 ? value + 'T00:00:00' : value); return isNaN(date.getTime()) ? value : date.toLocaleDateString('zh-CN', { month:'long', day:'numeric' }); }
+      function timeText(value) { var date = new Date(value || Date.now()); return isNaN(date.getTime()) ? '' : date.toLocaleString('zh-CN', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false }); }
+      function showToast(message) { var box = document.getElementById('toast'); box.textContent = message; box.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { box.classList.remove('show'); }, 2400); }
+
+      function configureCloud() {
+        try {
+          var raw = window.AndroidBridge && window.AndroidBridge.getSupabaseConfig ? window.AndroidBridge.getSupabaseConfig() : '';
+          var config = raw ? JSON.parse(raw) : {};
+          cloud.url = String(config.url || '').replace(/\/$/, '');
+          cloud.key = String(config.key || '');
+          cloud.configured = Boolean(cloud.url && cloud.key);
+        } catch (_) {
+          cloud.configured = false;
+        }
+      }
+      async function cloudRequest(path, options) {
+        if (!cloud.configured) throw new Error('Supabase 尚未配置');
+        var request = options || {};
+        var headers = Object.assign({ apikey:cloud.key, Authorization:'Bearer ' + cloud.key, Accept:'application/json' }, request.headers || {});
+        if (request.body != null) headers['Content-Type'] = 'application/json';
+        var response = await fetch(cloud.url + '/rest/v1/' + path, Object.assign({}, request, { headers:headers }));
+        var text = await response.text();
+        var data = null;
+        try { data = text ? JSON.parse(text) : null; } catch (_) { data = text; }
+        if (!response.ok) throw new Error((data && data.message) || ('HTTP ' + response.status));
+        return data;
+      }
+      function validCloudDate(value) { return /^\d{4}-\d{2}-\d{2}$/.test(String(value || '')) ? String(value) : null; }
+      function recordToCloudRow(record) {
+        return { id:String(record.id), title:String(record.title || ''), category:String(record.category || ''), occurred_on:validCloudDate(record.date || record.occurredOn), description:String(record.description || ''), ai_description:String(record.aiDescription || ''), keywords:Array.isArray(record.keywords) ? record.keywords.map(String) : [], uncertainties:Array.isArray(record.uncertainties) ? record.uncertainties.map(String) : [], files:Array.isArray(record.files) ? record.files : [], photos:Array.isArray(record.photos) ? record.photos : [], needs_date:Boolean(record.needsDate), created_via:record.createdVia ? String(record.createdVia) : 'mobile', created_at:new Date(record.createdAt || Date.now()).toISOString() };
+      }
+      function noteToCloudRow(note) { return { id:String(note.id), content:String(note.content || note.text || '').trim(), note_date:validCloudDate(note.date), created_at:new Date(note.createdAt || Date.now()).toISOString() }; }
+      function cloudRowToRecord(row) { return { id:row.id, title:row.title || '', category:row.category || '', date:row.occurred_on || '', description:row.description || '', aiDescription:row.ai_description || '', keywords:Array.isArray(row.keywords) ? row.keywords : [], uncertainties:Array.isArray(row.uncertainties) ? row.uncertainties : [], files:Array.isArray(row.files) ? row.files : [], photos:Array.isArray(row.photos) ? row.photos : [], createdAt:row.created_at, needsDate:Boolean(row.needs_date), ...(row.created_via ? { createdVia:row.created_via } : {}) }; }
+      function cloudRowToNote(row) { return { id:row.id, content:row.content || '', date:row.note_date || '', createdAt:row.created_at }; }
+      async function upsertCloud(collection, item) {
+        var row = collection === 'records' ? recordToCloudRow(item) : noteToCloudRow(item);
+        if (collection === 'notes' && !row.content) throw new Error('随手记内容不能为空');
+        await cloudRequest(collection + '?on_conflict=id', { method:'POST', headers:{ Prefer:'resolution=merge-duplicates,return=minimal' }, body:JSON.stringify([row]) });
+        cloud.online = true;
+      }
+      async function readCloudCollections() {
+        var result = await Promise.all([cloudRequest('records?select=*&order=created_at.desc'), cloudRequest('notes?select=*&order=created_at.desc')]);
+        return { records:(result[0] || []).map(cloudRowToRecord), notes:(result[1] || []).map(cloudRowToNote) };
+      }
+      async function syncFromCloud() {
+        if (!cloud.configured || cloud.syncing) return;
+        cloud.syncing = true;
+        var localRecords = records(), localNotes = notes();
+        try {
+          var remote = await readCloudCollections();
+          var remoteRecordIds = new Set(remote.records.map(function (item) { return String(item.id); }));
+          var remoteNoteIds = new Set(remote.notes.map(function (item) { return String(item.id); }));
+          var localOnlyRecords = localRecords.filter(function (item) { return !remoteRecordIds.has(String(item.id)); });
+          var localOnlyNotes = localNotes.filter(function (item) { return !remoteNoteIds.has(String(item.id)); });
+          await Promise.all(localOnlyRecords.map(function (item) { return upsertCloud('records', item); }).concat(localOnlyNotes.map(function (item) { return upsertCloud('notes', item); })));
+          write(RECORDS_KEY, remote.records.concat(localOnlyRecords));
+          write(NOTES_KEY, remote.notes.concat(localOnlyNotes));
+          cloud.online = true;
+          render();
+          showToast(localOnlyRecords.length || localOnlyNotes.length ? '云端已连接，本机数据已同步' : '云端数据已同步');
+        } catch (error) {
+          cloud.online = false;
+          showToast('云端暂时不可用，已保留本机数据');
+        } finally {
+          cloud.syncing = false;
+        }
+      }
+      function recordCard(record) { return '<article class="record-card"><span class="record-dot"></span><div class="record-card-main"><strong class="record-card-title">' + esc(record.title || '未命名经历') + '</strong><div class="record-card-meta"><span>' + esc(dateText(record.date || record.occurredOn)) + '</span><span>·</span><span>' + esc(record.category || '未分类') + '</span></div><p class="record-card-desc">' + esc(record.description || '') + '</p></div></article>'; }
+      function noteCard(note) { return '<article class="note-card"><p>' + esc(note.content || note.text || '') + '</p><time>' + esc(timeText(note.createdAt || note.date)) + '</time></article>'; }
+      function render() {
+        var allRecords = records(), allNotes = notes(), now = new Date(), month = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2, '0');
+        var recordCount = document.getElementById('record-count'); if (recordCount) recordCount.textContent = allRecords.length;
+        var noteCount = document.getElementById('note-count'); if (noteCount) noteCount.textContent = allNotes.length;
+        var monthCount = document.getElementById('month-count'); if (monthCount) monthCount.textContent = allRecords.filter(function (item) { return String(item.createdAt || '').slice(0,7) === month; }).length;
+        var homeRecords = document.getElementById('home-record-list'); if (homeRecords) homeRecords.innerHTML = allRecords.slice(0,3).map(recordCard).join('') || '<div class="empty">还没有经历记录，从今天开始留下一段。</div>';
+        document.getElementById('notes-list').innerHTML = allNotes.map(noteCard).join('') || '<div class="empty">还没有随手记，想到什么就写下来。</div>';
+        document.getElementById('notes-total').textContent = allNotes.length ? allNotes.length + ' 条' : '';
+        document.getElementById('library-records').innerHTML = allRecords.map(recordCard).join('') || '<div class="empty">还没有经历记录。</div>';
+        document.getElementById('library-notes').innerHTML = allNotes.map(noteCard).join('') || '<div class="empty">还没有随手记。</div>';
+      }
+      function go(view) {
+        currentView = view;
+        document.querySelectorAll('.view').forEach(function (item) { item.classList.toggle('active', item.id === view + '-view'); });
+        document.querySelectorAll('.nav-item').forEach(function (item) { item.classList.toggle('active', item.dataset.go === view); });
+        if (view === 'record' && !document.getElementById('record-date').value) document.getElementById('record-date').value = new Date().toISOString().slice(0,10);
+        render(); window.scrollTo(0, 0);
+      }
+      function saveNote(inputId, statusId) {
+        var input = document.getElementById(inputId), content = input.value.trim();
+        if (!content) { showToast('先写下一点内容吧'); input.focus(); return; }
+        var item = { id:'note-mobile-' + Date.now(), content:content, createdAt:new Date().toISOString() };
+        var list = notes(); list.unshift(item); write(NOTES_KEY, list); input.value = ''; document.getElementById(statusId).textContent = '已保存到你的随手记'; render();
+        upsertCloud('notes', item).then(function () { showToast('随手记已保存到云端'); }).catch(function () { showToast('随手记已保存到本机，云端暂不可用'); });
+      }
+      var attachmentDbPromise;
+      function openAttachmentDb() {
+        if (attachmentDbPromise) return attachmentDbPromise;
+        attachmentDbPromise = new Promise(function (resolve, reject) {
+          var request = indexedDB.open('ji-media-v1', 1);
+          request.onupgradeneeded = function () { if (!request.result.objectStoreNames.contains('uploads')) request.result.createObjectStore('uploads', { keyPath:'id' }); };
+          request.onsuccess = function () { resolve(request.result); };
+          request.onerror = function () { reject(request.error); };
+        });
+        return attachmentDbPromise;
+      }
+      async function storeAttachment(file) {
+        var item = { id:'media-' + Date.now() + '-' + Math.random().toString(36).slice(2,8), name:file.name, type:file.type || 'application/octet-stream', size:file.size, blob:file };
+        var db = await openAttachmentDb();
+        await new Promise(function (resolve, reject) { var tx = db.transaction('uploads', 'readwrite'); tx.objectStore('uploads').put(item); tx.oncomplete = resolve; tx.onerror = function () { reject(tx.error); }; });
+        return { id:item.id, name:item.name, type:item.type, size:item.size };
+      }
+      function attachmentSize(size) { var value = Number(size || 0); if (value < 1024) return value + ' B'; if (value < 1024 * 1024) return Math.round(value / 1024) + ' KB'; return (value / 1024 / 1024).toFixed(1) + ' MB'; }
+      function renderPendingAttachments() {
+        var photoInput = document.getElementById('record-photos'), fileInput = document.getElementById('record-files'), list = document.getElementById('record-attachment-list');
+        if (!photoInput || !fileInput || !list) return;
+        var files = Array.from(photoInput.files || []).concat(Array.from(fileInput.files || []));
+        list.innerHTML = files.map(function (file) { return '<div class="attachment-chip"><span>' + (file.type && file.type.indexOf('image/') === 0 ? '▧' : '▤') + '</span><strong>' + esc(file.name) + '</strong><span>' + attachmentSize(file.size) + '</span></div>'; }).join('');
+      }
+      function startVoice(targetId) {
+        voiceTargetId = targetId; var button = document.querySelector('[data-voice-target="' + targetId + '"]'); if (button) button.classList.add('recording');
+        if (window.AndroidBridge && window.AndroidBridge.startVoiceInput) { window.AndroidBridge.startVoiceInput(); return; }
+        if (window.SpeechRecognition || window.webkitSpeechRecognition) { var Recognition = window.SpeechRecognition || window.webkitSpeechRecognition, recognition = new Recognition(); recognition.lang = 'zh-CN'; recognition.onresult = function (event) { window.__receiveVoiceResult(event.results[0][0].transcript, ''); }; recognition.onerror = function () { window.__receiveVoiceResult('', '语音识别失败'); }; recognition.start(); return; }
+        window.__receiveVoiceResult('', '当前环境不支持语音输入');
+      }
+      window.__receiveVoiceResult = function (text, error) { var button = document.querySelector('[data-voice-target="' + voiceTargetId + '"]'); if (button) button.classList.remove('recording'); var input = document.getElementById(voiceTargetId); if (text && input) { input.value = (input.value ? input.value + ' ' : '') + text; input.focus(); showToast('已填入语音内容'); } else if (error) showToast(error); voiceTargetId = ''; };
+      window.mobileBack = function () { if (currentView !== 'home') { go('home'); return true; } return false; };
+
+      document.addEventListener('click', function (event) {
+        var goButton = event.target.closest('[data-go]'); if (goButton) { go(goButton.dataset.go); return; }
+        var voiceButton = event.target.closest('[data-voice-target]'); if (voiceButton) { startVoice(voiceButton.dataset.voiceTarget); return; }
+        var tab = event.target.closest('[data-library-tab]'); if (tab) { document.querySelectorAll('[data-library-tab]').forEach(function (item) { item.classList.toggle('active', item === tab); }); var recordsTab = tab.dataset.libraryTab === 'records'; document.getElementById('library-records').style.display = recordsTab ? '' : 'none'; document.getElementById('library-notes').style.display = recordsTab ? 'none' : ''; }
+      });
+      document.getElementById('home-note-save').addEventListener('click', function () { saveNote('home-note-input', 'home-note-status'); });
+      var notesSaveButton = document.getElementById('notes-note-save'); if (notesSaveButton) notesSaveButton.addEventListener('click', function () { saveNote('notes-note-input', 'notes-note-status'); });
+      document.getElementById('record-photos').addEventListener('change', renderPendingAttachments);
+      document.getElementById('record-files').addEventListener('change', renderPendingAttachments);
+      document.getElementById('record-form').addEventListener('submit', async function (event) { event.preventDefault(); var title = document.getElementById('record-title').value.trim(), description = document.getElementById('record-description').value.trim(); if (!title || !description) { showToast('请填写标题和记录内容'); return; } var submitButton = event.target.querySelector('button[type="submit"]'); submitButton.disabled = true; submitButton.textContent = '正在保存…'; try { var photoFiles = Array.from(document.getElementById('record-photos').files || []), documentFiles = Array.from(document.getElementById('record-files').files || []); var storedPhotos = await Promise.all(photoFiles.map(storeAttachment)), storedFiles = await Promise.all(documentFiles.map(storeAttachment)); var item = { id:'record-mobile-' + Date.now(), title:title, date:document.getElementById('record-date').value || '', category:document.getElementById('record-category').value, description:description, aiDescription:'', keywords:[], uncertainties:[], files:storedFiles, photos:storedPhotos, needsDate:!document.getElementById('record-date').value, createdVia:'mobile', createdAt:new Date().toISOString() }; var list = records(); list.unshift(item); write(RECORDS_KEY, list); event.target.reset(); document.getElementById('record-date').value = new Date().toISOString().slice(0,10); renderPendingAttachments(); render(); go('home'); upsertCloud('records', item).then(function () { showToast('经历和附件已保存到云端'); }).catch(function () { showToast('经历已保存到本机，云端暂不可用'); }); } catch (error) { showToast('附件保存失败：' + error.message); } finally { submitButton.disabled = false; submitButton.textContent = '保存经历'; } });
+      configureCloud();
+      go('home');
+      syncFromCloud();
+    }());
+  </script>
+</body>
+</html>
